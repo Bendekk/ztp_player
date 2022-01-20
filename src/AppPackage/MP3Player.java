@@ -16,6 +16,8 @@ import javazoom.jl.player.Player;
  */
 public class MP3Player extends javax.swing.JFrame {
 
+    private State state;
+
     private Player myplayer;
     private File fileCurrentlyPlaying;
     private ArrayList <File> filePlaylist = new ArrayList();
@@ -26,7 +28,9 @@ public class MP3Player extends javax.swing.JFrame {
     private boolean Browsed;
 
     private Thread b;
-    public MP3Player() {
+    public MP3Player() { // songPlayer has gui
+
+
         initComponents();
         this.ReadPlaylistFile();
         this.DrawPlaylist();
@@ -787,6 +791,10 @@ public class MP3Player extends javax.swing.JFrame {
                 new MP3Player().setVisible(true);
             }
         });
+    }
+
+    public void changeState(State state){
+        this.state = state;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
