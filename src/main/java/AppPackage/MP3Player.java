@@ -1,5 +1,6 @@
 
 package AppPackage;
+import com.mpatric.mp3agic.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,11 +29,23 @@ public class MP3Player extends javax.swing.JFrame {
     private boolean Browsed;
 
     private Thread b;
-    public MP3Player() { // songPlayer has gui
+    public MP3Player() throws InvalidDataException, UnsupportedTagException, IOException { // songPlayer has gui
 
 
         initComponents();
         this.ReadPlaylistFile();
+        if (filePlaylist.size() > 0) {
+            System.out.println(filePlaylist.get(0).toString());
+            Mp3File mp3File = new Mp3File(filePlaylist.get(0));
+            System.out.printf(mp3File.hasId3v1Tag() ? "ID3v1 tag present\n" : "No ID3v1 tag present\n");
+            System.out.printf(mp3File.hasId3v2Tag() ? "ID3v2 tag present\n" : "No ID3v2 tag present\n");
+            if (mp3File.hasId3v2Tag()) {
+                System.out.println(mp3File.getLengthInSeconds());
+                System.out.println(mp3File.getId3v2Tag().getArtist());
+            }
+
+        }
+
         this.DrawPlaylist();
         this.setSize(377, 288);
         this.Browsed = false;
@@ -788,7 +801,15 @@ public class MP3Player extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MP3Player().setVisible(true);
+                try {
+                    new MP3Player().setVisible(true);
+                } catch (InvalidDataException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedTagException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -825,5 +846,6 @@ public class MP3Player extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextField jTextFieldPlayingFile;
+
     // End of variables declaration//GEN-END:variables
 }

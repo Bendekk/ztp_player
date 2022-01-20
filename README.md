@@ -22,12 +22,12 @@ Singleton: Tworzenie klasy przetrzymującej piosenki.
 
 Factory method: interfejs - ciemny, jasny motyw
 
-Polecenie: alternatywne posługiwanie się odtwarzaczem (myszką i klawiaturą) next,
+### TODO Polecenie: alternatywne posługiwanie się odtwarzaczem (myszką i klawiaturą) next,
 previous, start, stop 5
 
 Proxy: Wykorzystywany przy kopiowaniu playlisty
 
-Dekorator: Losowanie piosenek
+### TODO Dekorator: Losowanie piosenek
 
 Fasada: odtwarzanie muzyki - upraszczanie implementacji wczytywania strumienia
 danych z pliku muzycznego i odtwarzania go.
