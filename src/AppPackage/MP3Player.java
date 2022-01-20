@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.Exception;
-import java.net.*;
 import java.io.*;
 import java.util.*;
 import javax.swing.JFileChooser;
@@ -15,7 +14,7 @@ import javazoom.jl.player.Player;
  *
  * @author Black2
  */
-public class Project34 extends javax.swing.JFrame {
+public class MP3Player extends javax.swing.JFrame {
 
     private Player myplayer;
     private File fileCurrentlyPlaying;
@@ -27,7 +26,7 @@ public class Project34 extends javax.swing.JFrame {
     private boolean Browsed;
 
     private Thread b;
-    public Project34() {
+    public MP3Player() {
         initComponents();
         this.ReadPlaylistFile();
         this.DrawPlaylist();
@@ -73,7 +72,7 @@ public class Project34 extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 if(a!=null&&RepeatMode&&filePlaylist!=null)
                 {
-                    if(!Project34.a.isAlive() && !filePlaylist.isEmpty())
+                    if(!MP3Player.a.isAlive() && !filePlaylist.isEmpty())
                     {
                         a = new Thread ()
                         {
@@ -705,12 +704,12 @@ public class Project34 extends javax.swing.JFrame {
         if(this.jButtonRepeatMode.getText().compareTo("Repeat Mode is ON!")==0)
         {
             this.jButtonRepeatMode.setText("Repeat Mode is OFF!");
-            Project34.RepeatMode = false;
+            MP3Player.RepeatMode = false;
         }
         else
         {
             this.jButtonRepeatMode.setText("Repeat Mode is ON!");
-            Project34.RepeatMode = true;
+            MP3Player.RepeatMode = true;
         }
     }//GEN-LAST:event_jButtonRepeatModeActionPerformed
 
@@ -771,13 +770,13 @@ public class Project34 extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Project34.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MP3Player.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Project34.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MP3Player.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Project34.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MP3Player.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Project34.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MP3Player.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -785,7 +784,7 @@ public class Project34 extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Project34().setVisible(true);
+                new MP3Player().setVisible(true);
             }
         });
     }
