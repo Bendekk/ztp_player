@@ -17,130 +17,113 @@ import javazoom.jl.player.Player;
 public class MP3PlayerCopy extends javax.swing.JFrame {
 
     private State state;
-//    TODO zmienic pozniej
-    public Player myplayer;
 
-//    private Player myplayer;
-    public File fileCurrentlyPlaying;
-
-    //    private File fileCurrentlyPlaying;
-//    TODO zmienic pozniej
-    public ArrayList <File> filePlaylist = new ArrayList();
-    //    private ArrayList <File> filePlaylist = new ArrayList();
-//    private final File playlistPhysicalFile = new File("playlist.txt");
-
-    public final File playlistPhysicalFile = new File("playlist.txt");
-//    TODO
-        public static Thread a;
-
-    //    private static Thread a;
+    private Player myplayer;
+    private File fileCurrentlyPlaying;
+    private ArrayList <File> filePlaylist = new ArrayList();
+    private final File playlistPhysicalFile = new File("playlist.txt");
+    private static Thread a;
     private static int iterator;
-    //    TODO
-    public static boolean RepeatMode;
-
-//    private static boolean RepeatMode;
-//    TODO
-    public boolean Browsed;
-//    private boolean Browsed;
+    private static boolean RepeatMode;
+    private boolean Browsed;
 
     private Thread b;
     public MP3PlayerCopy() { // songPlayer has gui
 
 
-//        initComponents();
-        ProjectForm p = new ProjectForm(this);
-//        this.ReadPlaylistFile();
-//        this.DrawPlaylist();
-//        this.setSize(377, 288);
-//        this.Browsed = false;
-//        if(fileCurrentlyPlaying==null)
-//        {
-//            this.jTextFieldPlayingFile.setText("No file selected!");
-//        }
-//        jListPlaylist.setFocusable(false);
-//        jListPlaylist.setOpaque(false);
-//        jListPlaylist.setVerifyInputWhenFocusTarget(false);
-//        jScrollPane2.setViewportView(jListPlaylist);
-//        jListPlaylist.getAccessibleContext().setAccessibleName("");
-//        this.jButtonPlay.addActionListener(new ActionListener()
-//        {
-//            public void actionPerformed(ActionEvent actionEvent)
-//            {
-//                String value = jListPlaylist.getSelectedValue();
-//                if(filePlaylist!=null && !filePlaylist.isEmpty() && !Browsed)
-//                {
-//                    for(File s : filePlaylist)
-//                    {
-//                        if(value!=null)
-//                        {
-//                            if(s.getName().compareTo(value)==0)
-//                            {
-//                                fileCurrentlyPlaying = s;
-//                                if(fileCurrentlyPlaying!=null)
-//                                {
-//                                    PlaySongFile();
-//                                    break;
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        });
-//        iterator = 0;
-//        javax.swing.Timer timer = new javax.swing.Timer(1000, new ActionListener(){
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                if(a!=null&&RepeatMode&&filePlaylist!=null)
-//                {
-//                    if(!MP3Player.a.isAlive() && !filePlaylist.isEmpty())
-//                    {
-//                        a = new Thread ()
-//                        {
-//                            public void run()
-//                            {
-//                                try
-//                                {
-//                                    FileInputStream buff;
-//                                    if(filePlaylist.size()-1>=iterator)
-//                                    {
-//                                        fileCurrentlyPlaying = filePlaylist.get(iterator);
-//                                        buff = new FileInputStream(fileCurrentlyPlaying);
-//                                        iterator++;
-//                                        jTextFieldPlayingFile.setText(filePlaylist.get(iterator).getName());
-//                                    }
-//                                    else
-//                                    {
-//                                        iterator=0;
-//                                        fileCurrentlyPlaying = filePlaylist.get(iterator);
-//                                        buff = new FileInputStream(fileCurrentlyPlaying);
-//                                        jTextFieldPlayingFile.setText(filePlaylist.get(iterator).getName());
-//                                    }
-//                                    if(buff!=null)
-//                                    {
-//                                        myplayer = new Player(buff);
-//                                        if (myplayer != null)
-//                                        {
-//                                            myplayer.play();
-//                                            jTextFieldPlayingFile.setText("Playing: " + fileCurrentlyPlaying.getName());
-//                                        }
-//                                    }
-//                                }
-//                                catch(Exception e)
-//                                {
-//                                    System.out.printf("Error autoselection: %s\n", e);
-//                                }
-//                            }
-//
-//                        };
-//                        a.start();
-//                    }
-//                }
-//            }
-//        });
-//        timer.setRepeats(true);
-//        timer.setCoalesce(true);
-//        timer.start();
+        initComponents();
+        this.ReadPlaylistFile();
+        this.DrawPlaylist();
+        this.setSize(377, 288);
+        this.Browsed = false;
+        if(fileCurrentlyPlaying==null)
+        {
+            this.jTextFieldPlayingFile.setText("No file selected!");
+        }
+        jListPlaylist.setFocusable(false);
+        jListPlaylist.setOpaque(false);
+        jListPlaylist.setVerifyInputWhenFocusTarget(false);
+        jScrollPane2.setViewportView(jListPlaylist);
+        jListPlaylist.getAccessibleContext().setAccessibleName("");
+        this.jButtonPlay.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                String value = jListPlaylist.getSelectedValue();
+                if(filePlaylist!=null && !filePlaylist.isEmpty() && !Browsed)
+                {
+                    for(File s : filePlaylist)
+                    {
+                        if(value!=null)
+                        {
+                            if(s.getName().compareTo(value)==0)
+                            {
+                                fileCurrentlyPlaying = s;
+                                if(fileCurrentlyPlaying!=null)
+                                {
+                                    PlaySongFile();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        iterator = 0;
+        javax.swing.Timer timer = new javax.swing.Timer(1000, new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(a!=null&&RepeatMode&&filePlaylist!=null)
+                {
+                    if(!MP3PlayerCopy.a.isAlive() && !filePlaylist.isEmpty())
+                    {
+                        a = new Thread ()
+                        {
+                            public void run()
+                            {
+                                try
+                                {
+                                    FileInputStream buff;
+                                    if(filePlaylist.size()-1>=iterator)
+                                    {
+                                        fileCurrentlyPlaying = filePlaylist.get(iterator);
+                                        buff = new FileInputStream(fileCurrentlyPlaying);
+                                        iterator++;
+                                        jTextFieldPlayingFile.setText(filePlaylist.get(iterator).getName());
+                                    }
+                                    else
+                                    {
+                                        iterator=0;
+                                        fileCurrentlyPlaying = filePlaylist.get(iterator);
+                                        buff = new FileInputStream(fileCurrentlyPlaying);
+                                        jTextFieldPlayingFile.setText(filePlaylist.get(iterator).getName());
+                                    }
+                                    if(buff!=null)
+                                    {
+                                        myplayer = new Player(buff);
+                                        if (myplayer != null)
+                                        {
+                                            myplayer.play();
+                                            jTextFieldPlayingFile.setText("Playing: " + fileCurrentlyPlaying.getName());
+                                        }
+                                    }
+                                }
+                                catch(Exception e)
+                                {
+                                    System.out.printf("Error autoselection: %s\n", e);
+                                }
+                            }
+
+                        };
+                        a.start();
+                    }
+                }
+            }
+        });
+        timer.setRepeats(true);
+        timer.setCoalesce(true);
+        timer.start();
     }
 
     /**
@@ -148,7 +131,7 @@ public class MP3PlayerCopy extends javax.swing.JFrame {
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
      */
-//    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -267,7 +250,7 @@ public class MP3PlayerCopy extends javax.swing.JFrame {
             }
         });
 
-//        jButtonBrowse.setText("Browse");
+        jButtonBrowse.setText("Browse");
         jButtonBrowse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonBrowseActionPerformed(evt);
@@ -725,7 +708,7 @@ public class MP3PlayerCopy extends javax.swing.JFrame {
         if(this.jButtonRepeatMode.getText().compareTo("Repeat Mode is ON!")==0)
         {
             this.jButtonRepeatMode.setText("Repeat Mode is OFF!");
-            this.RepeatMode = false;
+            MP3PlayerCopy.RepeatMode = false;
         }
         else
         {
@@ -805,7 +788,7 @@ public class MP3PlayerCopy extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MP3Player();
+                new MP3PlayerCopy().setVisible(true);
             }
         });
     }
