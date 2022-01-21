@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
 
 public class ProjectForm extends JFrame {
@@ -51,6 +52,11 @@ public class ProjectForm extends JFrame {
     private JButton jButtonAddToPlaylist;
     private JList jListPlaylist;
     private JTextField jTextFieldPlayingFile;
+    private JButton jButtonColorMode;
+
+    boolean isLightModeOn = false;
+    ThemedFrame lightThemeFrame = new LightThemeFrame();
+    ThemedFrame darkThemeFrame = new DarkThemeFrame();
 
     //    private JButton jButtonAddToPlaylist;
 //    private JButton jButtonBrowse;
@@ -65,6 +71,7 @@ public class ProjectForm extends JFrame {
 //    private JButton jButtonShuffle;
 //    private JButton jButtonStop;
     public ProjectForm(MP3Player k){
+        darkThemeFrame.changeTheme(this);
         this.setSize(377, 288);
         this.setContentPane(panel1);
         this.pack();
@@ -132,6 +139,11 @@ public class ProjectForm extends JFrame {
         jButtonStop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonStopActionPerformed(evt, k);
+            }
+        });
+        jButtonColorMode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSetColorMode(evt, k);
             }
         });
     }
@@ -406,7 +418,7 @@ public class ProjectForm extends JFrame {
         }
     }
     private void jButtonRepeatModeActionPerformed(java.awt.event.ActionEvent evt, MP3Player k) {//GEN-FIRST:event_jButtonRepeatModeActionPerformed
-        if(this.jButtonRepeatMode.getText().compareTo("Repeat Mode is ON!")==0)
+        if(this.jButtonRepeatMode.getText().compareTo("Repeat Mode is ON!") ==0)
         {
             this.jButtonRepeatMode.setText("Repeat Mode is OFF!");
             k.RepeatMode = false;
@@ -439,6 +451,36 @@ public class ProjectForm extends JFrame {
             k.a.suspend();
             jTextFieldPlayingFile.setText("Stopped on: " + k.fileCurrentlyPlaying.getName());
         }
+    }
+    private void jButtonSetColorMode(java.awt.event.ActionEvent evt, MP3Player k) {//GEN-FIRST:event_jButtonStopActionPerformed
+        if(isLightModeOn) {
+            darkThemeFrame.changeTheme(this);
+            isLightModeOn = false;
+        }
+        else {
+            lightThemeFrame.changeTheme(this);
+            isLightModeOn = true;
+        }
+    }
+    public LinkedList<JComponent> returnAllThemeComponents(){
+        LinkedList<JComponent> components = new LinkedList<>();
+        components.push(panel1);
+        components.push(jButtonClearPlaylist);
+        components.push(jButtonPlay);
+        components.push(jButtonPreviousSong);
+        components.push(jButtonBrowse);
+        components.push(jButtonDisplayPlaylist);
+        components.push(jButtonPause);
+        components.push(jButtonNextSong);
+        components.push(jButtonPrintPlaylist);
+        components.push(jButtonRepeatMode);
+        components.push(jButtonShuffle);
+        components.push(jButtonStop);
+        components.push(jButtonAddToPlaylist);
+        components.push(jListPlaylist);
+        components.push(jTextFieldPlayingFile);
+        components.push(jButtonColorMode);
+        return components;
     }
 //    public class ProjectForm(){
 //        jFileChooser1 = new javax.swing.JFileChooser();
