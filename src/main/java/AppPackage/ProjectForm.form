@@ -146,6 +146,14 @@
                   <text value="Change theme"/>
                 </properties>
               </component>
+              <component id="37b50" class="javax.swing.JButton" binding="jButtonBrowsePlaylist">
+                <constraints>
+                  <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Browse playlists"/>
+                </properties>
+              </component>
             </children>
           </grid>
           <component id="d649c" class="javax.swing.JTextField" binding="jTextFieldPlayingFile">

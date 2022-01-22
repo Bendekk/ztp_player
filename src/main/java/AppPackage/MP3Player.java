@@ -30,7 +30,7 @@ public class MP3Player extends javax.swing.JFrame {
     //    private ArrayList <File> filePlaylist = new ArrayList();
 //    private final File playlistPhysicalFile = new File("playlist.txt");
 
-    public final File playlistPhysicalFile = new File("playlist.txt");
+    public File playlistPhysicalFile = new File("playlist.txt");
 //    TODO
         public static Thread a;
 

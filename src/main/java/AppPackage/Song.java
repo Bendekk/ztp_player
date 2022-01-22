@@ -12,4 +12,12 @@ public class Song {
         this.duration = duration;
         this.year = year;
     }
+
+    public boolean update(String name){
+        if( this.name.compareTo(name) == 0 ) {
+            System.out.printf("File: %s is already in the playlist.\n", name);
+            return false;
+        }
+        return true;
+    }
 }
