@@ -3,6 +3,7 @@ package AppPackage;
 import javazoom.jl.player.Player;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -39,25 +40,47 @@ public class ProjectForm extends JFrame implements KeyListener{
 //    private javax.swing.JScrollPane jScrollPane2;
 //    private javax.swing.JScrollPane jScrollPane3;
 //    private javax.swing.JTextField jTextFieldPlayingFile;
-    private JPanel panel1;
-    private JButton jButtonClearPlaylist;
-    private JButton jButtonPlay;
-    private JButton jButtonPreviousSong;
-    private JButton jButtonBrowse;
-    private JButton jButtonDisplayPlaylist;
-    private JButton jButtonPause;
-    private JButton jButtonNextSong;
-    private JButton jButtonPrintPlaylist;
-    private JButton jButtonRepeatMode;
-    private JButton jButtonShuffle;
-    private JButton jButtonStop;
-    private JButton jButtonAddToPlaylist;
-    private JList jListPlaylist;
-    private JTextField jTextFieldPlayingFile;
-    private JButton jButtonColorMode;
+//    private JPanel panel1;
+//    private JButton jButtonClearPlaylist;
+//    private JButton jButtonPlay;
+//    private JButton jButtonPreviousSong;
+//    private JButton jButtonBrowse;
+//    private JButton jButtonDisplayPlaylist;
+//    private JButton jButtonPause;
+//    private JButton jButtonNextSong;
+//    private JButton jButtonPrintPlaylist;
+//    private JButton jButtonRepeatMode;
+//    private JButton jButtonShuffle;
+//    private JButton jButtonStop;
+//    private JButton jButtonAddToPlaylist;
+//    private JList jListPlaylist;
+//    private JTextField jTextFieldPlayingFile;
+//    private JButton jButtonColorMode;
+//    private JButton jButtonBrowsePlaylist;
+    public JPanel panel1;
+    public JButton jButtonClearPlaylist;
+    public JButton jButtonPlay;
+    public JButton jButtonPreviousSong;
+    public JButton jButtonBrowse;
+    public JButton jButtonDisplayPlaylist;
+    public JButton jButtonPause;
+    public JButton jButtonNextSong;
+    public JButton jButtonPrintPlaylist;
+    public JButton jButtonRepeatMode;
+    public JButton jButtonShuffle;
+    public JButton jButtonStop;
+    public JButton jButtonAddToPlaylist;
+    public JList jListPlaylist;
+    public JTextField jTextFieldPlayingFile;
+    public JButton jButtonColorMode;
     private JButton jButtonBrowsePlaylist;
-
     boolean isLightModeOn = false;
+    boolean isPlaylistBrowsed = false;
+    boolean isFileBrowsed = false;
+
+    PauseCommand pauseCommand = new PauseCommand();
+    PlayCommand playCommand = new PlayCommand();
+
     ThemedFrame lightThemeFrame = new LightThemeFrame();
     ThemedFrame darkThemeFrame = new DarkThemeFrame();
 
@@ -73,22 +96,50 @@ public class ProjectForm extends JFrame implements KeyListener{
 //    private JButton jButtonRepeatMode;
 //    private JButton jButtonShuffle;
 //    private JButton jButtonStop;
-    public class MyKeyListener implements KeyListener {
-        @Override
-        public void keyTyped(KeyEvent e) {
-            System.out.println("keyTyped="+KeyEvent.getKeyText(e.getKeyCode()));
+    public class MyKeyListener implements KeyEventDispatcher {
+        MP3Player k;
+        ProjectForm f;
+        public MyKeyListener(ProjectForm f, MP3Player k){
+            this.k = k;
+            this.f = f;
         }
-
         @Override
-        public void keyPressed(KeyEvent e) {
-            System.out.println("keyPressed="+KeyEvent.getKeyText(e.getKeyCode()));
-        }
-
-        @Override
-        public void keyReleased(KeyEvent e) {
-            System.out.println("keyReleased="+KeyEvent.getKeyText(e.getKeyCode()));
+        public boolean dispatchKeyEvent(KeyEvent e) {
+            if (e.getID() == KeyEvent.KEY_PRESSED) {
+                switch( e.getKeyChar() ){
+                    case 'x':
+                        pauseCommand.execute(f, k.a, k);
+                        break;
+                    case 'c':
+                        playCommand.execute(f, k.a, k);
+                        break;
+                }
+//            } else if (e.getID() == KeyEvent.KEY_RELEASED) {
+//                System.out.println("2test2");
+//            } else if (e.getID() == KeyEvent.KEY_TYPED) {
+//                System.out.println("3test3");
+            }
+            return false;
         }
     }
+//        @Override
+//        public void keyTyped(KeyEvent e) {
+//            System.out.println("keyTyped="+KeyEvent.getKeyText(e.getKeyCode()));
+//        }
+//
+//        @Override
+//        public void keyPressed(KeyEvent e) {
+//            System.out.println("keyPressed="+KeyEvent.getKeyText(e.getKeyCode()));
+//            if( KeyEvent.getKeyText(e.getKeyCode()).compareTo("X") == 0 )
+//                if( k.a!=null)
+//                    pauseCommand.execute(f, k.a, k);
+//        }
+//
+//        @Override
+//        public void keyReleased(KeyEvent e) {
+//            System.out.println("keyReleased="+KeyEvent.getKeyText(e.getKeyCode()));
+//        }
+//    }
 
     public ProjectForm(MP3Player k){
 
@@ -99,9 +150,10 @@ public class ProjectForm extends JFrame implements KeyListener{
 
         this.setSize(377, 288);
         this.setContentPane(panel1);
-        KeyListener listener = new MyKeyListener();
-        addKeyListener(listener);
-        setFocusable(true);
+        KeyEventDispatcher listener = new MyKeyListener(this, k );
+        KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        manager.addKeyEventDispatcher(listener);
+        setFocusable(false);
 
         this.pack();
         this.setLocationRelativeTo(null);
@@ -114,72 +166,86 @@ public class ProjectForm extends JFrame implements KeyListener{
         jButtonPrintPlaylist.addActionListener(new ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonPrintPlaylistActionPerformed(evt, k, stopPlayManager);
+                jButtonPrintPlaylist.setFocusPainted(false);
             }
         });
         jButtonBrowse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonBrowseActionPerformed(evt, k);
+                jButtonBrowse.setSelected(false);
             }
         });
         jButtonClearPlaylist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonClearPlaylistActionPerformed(evt, k, stopPlayManager);
+                jButtonClearPlaylist.setSelected(false);
             }
         });
         jButtonPlay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonPlayActionPerformed(evt, k, stopPlayManager);
+                jButtonPlay.setSelected(false);
             }
         });
         jButtonPause.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonPauseActionPerformed(evt,k);
+                jButtonPause.setSelected(false);
             }
         });
         jButtonPreviousSong.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonPreviousSongActionPerformed(evt,k, stopPlayManager);
+                jButtonPreviousSong.setSelected(false);
             }
         });
         jButtonNextSong.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonNextSongActionPerformed(evt, k, stopPlayManager);
+                jButtonNextSong.setSelected(false);
             }
         });
         jButtonDisplayPlaylist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonDisplayPlaylistActionPerformed(evt);
+                jButtonDisplayPlaylist.setSelected(false);
             }
         });
 
         jButtonAddToPlaylist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAddToPlaylistActionPerformed(evt, k, stopPlayManager);
+                jButtonAddToPlaylist.setSelected(false);
             }
         });
         jButtonRepeatMode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonRepeatModeActionPerformed(evt, k);
+                jButtonRepeatMode.setSelected(false);
             }
         });
         jButtonShuffle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonShuffleActionPerformed(evt, k, stopPlayManager);
+                jButtonShuffle.setSelected(false);
             }
         });
         jButtonStop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonStopActionPerformed(evt, k, stopPlayManager);
+                jButtonStop.setSelected(false);
             }
         });
         jButtonColorMode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSetColorMode(evt, k);
+                jButtonColorMode.setSelected(false);
             }
         });
         jButtonBrowsePlaylist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonBrowsePlaylists(evt, k, stopPlayManager);
+                jButtonBrowsePlaylist.setSelected(false);
             }
         });
     }
@@ -217,40 +283,40 @@ public class ProjectForm extends JFrame implements KeyListener{
         }
     }
     private void jButtonAddToPlaylistActionPerformed(java.awt.event.ActionEvent evt, MP3Player k, StopPlayManager stopPlayManager) {//GEN-FIRST:event_jButtonAddToPlaylistActionPerformed
-
         boolean GoFurther = true;
         this.ReadPlaylistFile(k, stopPlayManager); //refresh the playlist.
-        if(k.fileCurrentlyPlaying!=null) {
-            if(k.filePlaylist==null){
-                k.filePlaylist = new ArrayList();
-            }
-            if(!k.filePlaylist.isEmpty())
-            {
-                GoFurther = stopPlayManager.notifySubscribers(k.fileCurrentlyPlaying.getName());
-//                for(File s : k.filePlaylist)
-//                {
+        if( isFileBrowsed) {
+            if (k.fileCurrentlyPlaying != null) {
+                if (k.filePlaylist == null) {
+                    k.filePlaylist = new ArrayList();
+                }
+                if (!k.filePlaylist.isEmpty()) {
+                    GoFurther = stopPlayManager.notifySubscribers(k.fileCurrentlyPlaying.getName());
+                    //                for(File s : k.filePlaylist)
+                    //                {
 
-//                    if(s.compareTo(k.fileCurrentlyPlaying)==0)
-//                    {
-//                        GoFurther = false;
-//                        break;
-//                    }
-//                }
+                    //                    if(s.compareTo(k.fileCurrentlyPlaying)==0)
+                    //                    {
+                    //                        GoFurther = false;
+                    //                        break;
+                    //                    }
+                    //                }
+                }
+                if (GoFurther) {
+                    k.filePlaylist.add(k.fileCurrentlyPlaying);
+                    this.WritePlaylistFile(k);
+                    this.DrawPlaylist(k);
+                }
+                //            else
+                //            {
+                //                System.out.printf("File: %s is already in the playlist.\n", k.fileCurrentlyPlaying.getName());
+                //            }
+            } else {
+                System.out.printf("Please, select a file first!\n");
             }
-            if(GoFurther)
-            {
-                k.filePlaylist.add(k.fileCurrentlyPlaying);
-                this.WritePlaylistFile(k);
-                this.DrawPlaylist(k);
-            }
-//            else
-//            {
-//                System.out.printf("File: %s is already in the playlist.\n", k.fileCurrentlyPlaying.getName());
-//            }
         }
-        else{
-            System.out.printf("Please, select a file first!\n");
-        }
+        else
+            System.out.printf("Can't add playlist to playlist, you dumb dumb!\n");
     }
     private void WritePlaylistFile(MP3Player k)
     {
@@ -295,6 +361,8 @@ public class ProjectForm extends JFrame implements KeyListener{
     }
     private void jButtonBrowseActionPerformed(java.awt.event.ActionEvent evt, MP3Player k) {//GEN-FIRST:event_jButtonBrowseActionPerformed
         JFileChooser fileChooser = new JFileChooser();
+        isFileBrowsed = true;
+        isPlaylistBrowsed = false;
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             k.fileCurrentlyPlaying = fileChooser.getSelectedFile();
             this.jTextFieldPlayingFile.setText("Selected: " + k.fileCurrentlyPlaying.getName());
@@ -331,60 +399,61 @@ public class ProjectForm extends JFrame implements KeyListener{
     }
     private void PlaySongFile(MP3Player k)
     {
-        if(k.a!=null)
-        {
-            if(k.a.isAlive())
-            {
-                k.a.stop();
-            }
-        }
-        k.a = new Thread ()
-        {
-            public void run()
-            {
-                try
-                {
-                    if(k.fileCurrentlyPlaying!=null)
-                    {
-                        FileInputStream buff = new FileInputStream(k.fileCurrentlyPlaying);
-                        k.myplayer = new Player(buff);
-                        if (k.myplayer != null)
-                        {
-                            jTextFieldPlayingFile.setText("Playing: " + k.fileCurrentlyPlaying.getName());
-                            k.myplayer.play();
-                            k.Browsed = false;
-                        }
-                    }
-                }
-                catch(Exception e)
-                {
-                    System.out.printf("Error Playing File: %s\n", e);
-                }
-            }
-
-        };
-        k.a.start();
-
+        playCommand.execute(this, k.a, k);
+//        if(k.a!=null)
+//        {
+//            if(k.a.isAlive())
+//            {
+//                k.a.stop();
+//            }
+//        }
+//        k.a = new Thread ()
+//        {
+//            public void run()
+//            {
+//                try
+//                {
+//                    if(k.fileCurrentlyPlaying!=null)
+//                    {
+//                        FileInputStream buff = new FileInputStream(k.fileCurrentlyPlaying);
+//                        k.myplayer = new Player(buff);
+//                        if (k.myplayer != null)
+//                        {
+//                            jTextFieldPlayingFile.setText("Playing: " + k.fileCurrentlyPlaying.getName());
+//                            k.myplayer.play();
+//                            k.Browsed = false;
+//                        }
+//                    }
+//                }
+//                catch(Exception e)
+//                {
+//                    System.out.printf("Error Playing File: %s\n", e);
+//                }
+//            }
+//
+//        };
+//        k.a.start();
     }
     private void jButtonPauseActionPerformed(java.awt.event.ActionEvent evt, MP3Player k) {//GEN-FIRST:event_jButtonPauseActionPerformed
-        if( k.a!=null)
-        {
-            if(this.jButtonPause.getText().compareTo("Pause")==0)
-            {
-                this.jButtonPause.setText("Resume");
-                k.a.suspend();
-                if(k.fileCurrentlyPlaying!=null)
-                {
-                    this.jTextFieldPlayingFile.setText("Paused on: " + k.fileCurrentlyPlaying.getName());
-                }
-            }
-            else
-            {
-                this.jButtonPause.setText("Pause");
-                this.jTextFieldPlayingFile.setText("Playing: " + k.fileCurrentlyPlaying.getName());
-                k.a.resume();
-            }
-        }
+//        if( k.a!=null)
+//        {
+        pauseCommand.execute(this, k.a, k);
+//            if(this.jButtonPause.getText().compareTo("Pause")==0)
+//            {
+//                this.jButtonPause.setText("Resume");
+//                k.a.suspend();
+//                if(k.fileCurrentlyPlaying!=null)
+//                {
+//                    this.jTextFieldPlayingFile.setText("Paused on: " + k.fileCurrentlyPlaying.getName());
+//                }
+//            }
+//            else
+//            {
+//                this.jButtonPause.setText("Pause");
+//                this.jTextFieldPlayingFile.setText("Playing: " + k.fileCurrentlyPlaying.getName());
+//                k.a.resume();
+//            }
+//        }
     }
     private void jButtonPreviousSongActionPerformed(java.awt.event.ActionEvent evt, MP3Player k, StopPlayManager stopPlayManager) {//GEN-FIRST:event_jButtonPreviousSongActionPerformed
 
@@ -545,9 +614,12 @@ public class ProjectForm extends JFrame implements KeyListener{
         System.out.println(e + "KEY RELEASED: ");
     }
     public void jButtonBrowsePlaylists(java.awt.event.ActionEvent evt, MP3Player k, StopPlayManager stopPlayManager){
+        isFileBrowsed = false;
+        isPlaylistBrowsed = true;
         JFileChooser fileChooser = new JFileChooser();
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 //            stopPlayManager.unsubscribeAll();
+
             k.playlistPhysicalFile = new File( fileChooser.getSelectedFile().getName() );
             this.jTextFieldPlayingFile.setText("Selected playlist: " + fileChooser.getSelectedFile().getName() );
             // load from file
