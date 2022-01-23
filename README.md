@@ -1,3 +1,4 @@
+# TODO zmienić publiki na settery i gettery
 # MP3 Player
 
 ## Wzorce projektowe, użycie i zastosowanie
