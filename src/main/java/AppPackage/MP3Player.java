@@ -47,7 +47,6 @@ public class MP3Player extends javax.swing.JFrame {
     private Thread b;
     public MP3Player() throws InvalidDataException, UnsupportedTagException, IOException { // songPlayer has gui
 
-
 //        initComponents();
         ProjectForm p = new ProjectForm(this);
 //        this.ReadPlaylistFile();
