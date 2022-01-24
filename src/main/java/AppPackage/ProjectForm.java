@@ -96,19 +96,21 @@ public class ProjectForm extends JFrame implements KeyListener{
     public class MyKeyListener implements KeyEventDispatcher {
         MP3Player k;
         ProjectForm f;
-        public MyKeyListener(ProjectForm f, MP3Player k){
+        PlayerHoldingState playerHoldingState;
+        public MyKeyListener(ProjectForm f, MP3Player k, PlayerHoldingState playerHoldingState){
             this.k = k;
             this.f = f;
+            this.playerHoldingState = playerHoldingState;
         }
         @Override
         public boolean dispatchKeyEvent(KeyEvent e) {
             if (e.getID() == KeyEvent.KEY_PRESSED) {
                 switch( e.getKeyChar() ){
                     case 'x':
-                        pauseCommand.execute(f, k.a, k);
+                        pauseCommand.execute(f, k.a, k, playerHoldingState);
                         break;
                     case 'c':
-                        playCommand.execute(f, k.a, k);
+                        playCommand.execute(f, k.a, k, playerHoldingState);
                         break;
                 }
 //            } else if (e.getID() == KeyEvent.KEY_RELEASED) {
@@ -144,10 +146,11 @@ public class ProjectForm extends JFrame implements KeyListener{
 
         StopPlayManager stopPlayManager = new StopPlayManager();
         Playlist actualPlaylist = new Playlist();
+        PlayerHoldingState playerHoldingState = new PlayerHoldingState( new PlayerPauseState() );
 
         this.setSize(377, 288);
         this.setContentPane(panel1);
-        KeyEventDispatcher listener = new MyKeyListener(this, k );
+        KeyEventDispatcher listener = new MyKeyListener(this, k, playerHoldingState);
         KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         manager.addKeyEventDispatcher(listener);
         setFocusable(false);
@@ -180,25 +183,25 @@ public class ProjectForm extends JFrame implements KeyListener{
         });
         jButtonPlay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonPlayActionPerformed(evt, k, stopPlayManager);
+                jButtonPlayActionPerformed(evt, k, stopPlayManager, playerHoldingState);
                 jButtonPlay.setSelected(false);
             }
         });
         jButtonPause.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonPauseActionPerformed(evt,k);
+                jButtonPauseActionPerformed(evt,k, playerHoldingState);
                 jButtonPause.setSelected(false);
             }
         });
         jButtonPreviousSong.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonPreviousSongActionPerformed(evt,k, stopPlayManager, actualPlaylist);
+                jButtonPreviousSongActionPerformed(evt,k, stopPlayManager, actualPlaylist, playerHoldingState);
                 jButtonPreviousSong.setSelected(false);
             }
         });
         jButtonNextSong.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonNextSongActionPerformed(evt, k, stopPlayManager, actualPlaylist);
+                jButtonNextSongActionPerformed(evt, k, stopPlayManager, actualPlaylist, playerHoldingState);
                 jButtonNextSong.setSelected(false);
             }
         });
@@ -223,13 +226,13 @@ public class ProjectForm extends JFrame implements KeyListener{
         });
         jButtonShuffle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonShuffleActionPerformed(evt, k, stopPlayManager);
+                jButtonShuffleActionPerformed(evt, k, stopPlayManager, playerHoldingState);
                 jButtonShuffle.setSelected(false);
             }
         });
         jButtonStop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonStopActionPerformed(evt, k, stopPlayManager);
+                jButtonStopActionPerformed(evt, k, stopPlayManager, playerHoldingState);
                 jButtonStop.setSelected(false);
             }
         });
@@ -392,13 +395,13 @@ public class ProjectForm extends JFrame implements KeyListener{
             this.jButtonDisplayPlaylist.setText("Display Playlist");
         }
     }
-    private void jButtonPlayActionPerformed(java.awt.event.ActionEvent evt, MP3Player k, StopPlayManager stopPlayManager) {//GEN-FIRST:event_jButtonPlayActionPerformed
+    private void jButtonPlayActionPerformed(java.awt.event.ActionEvent evt, MP3Player k, StopPlayManager stopPlayManager, PlayerHoldingState playerHoldingState) {//GEN-FIRST:event_jButtonPlayActionPerformed
         // TODO add your handling code here:
-        this.PlaySongFile(k);
+        this.PlaySongFile(k, playerHoldingState);
     }
-    private void PlaySongFile(MP3Player k)
+    private void PlaySongFile(MP3Player k, PlayerHoldingState playerHoldingState)
     {
-        playCommand.execute(this, k.a, k);
+        playCommand.execute(this, k.a, k, playerHoldingState);
 //        if(k.a!=null)
 //        {
 //            if(k.a.isAlive())
@@ -433,10 +436,10 @@ public class ProjectForm extends JFrame implements KeyListener{
 //        };
 //        k.a.start();
     }
-    private void jButtonPauseActionPerformed(java.awt.event.ActionEvent evt, MP3Player k) {//GEN-FIRST:event_jButtonPauseActionPerformed
+    private void jButtonPauseActionPerformed(java.awt.event.ActionEvent evt, MP3Player k, PlayerHoldingState playerHoldingState) {//GEN-FIRST:event_jButtonPauseActionPerformed
 //        if( k.a!=null)
 //        {
-        pauseCommand.execute(this, k.a, k);
+        pauseCommand.execute(this, k.a, k, playerHoldingState);
 //            if(this.jButtonPause.getText().compareTo("Pause")==0)
 //            {
 //                this.jButtonPause.setText("Resume");
@@ -454,7 +457,7 @@ public class ProjectForm extends JFrame implements KeyListener{
 //            }
 //        }
     }
-    private void jButtonPreviousSongActionPerformed(ActionEvent evt, MP3Player k, StopPlayManager stopPlayManager, Playlist actualPlaylist) {//GEN-FIRST:event_jButtonPreviousSongActionPerformed
+    private void jButtonPreviousSongActionPerformed(ActionEvent evt, MP3Player k, StopPlayManager stopPlayManager, Playlist actualPlaylist, PlayerHoldingState playerHoldingState) {//GEN-FIRST:event_jButtonPreviousSongActionPerformed
 
         if(k.fileCurrentlyPlaying!=null && !k.filePlaylist.isEmpty())
         {
@@ -489,10 +492,10 @@ public class ProjectForm extends JFrame implements KeyListener{
         }
         if(k.a!=null && k.fileCurrentlyPlaying!=null)
         {
-            this.PlaySongFile(k);
+            this.PlaySongFile(k, playerHoldingState);
         }
     }
-    private void jButtonNextSongActionPerformed(java.awt.event.ActionEvent evt, MP3Player k, StopPlayManager stopPlayManager, Playlist actualPlaylist) {//GEN-FIRST:event_jButtonNextSongActionPerformed
+    private void jButtonNextSongActionPerformed(java.awt.event.ActionEvent evt, MP3Player k, StopPlayManager stopPlayManager, Playlist actualPlaylist, PlayerHoldingState playerHoldingState) {//GEN-FIRST:event_jButtonNextSongActionPerformed
         System.out.println("hihawa przed");
         if( k.fileCurrentlyPlaying != null && !k.filePlaylist.isEmpty() )
         {
@@ -554,7 +557,7 @@ public class ProjectForm extends JFrame implements KeyListener{
         }
         if(k.a!=null && k.fileCurrentlyPlaying!=null)
         {
-            this.PlaySongFile(k);
+            this.PlaySongFile(k, playerHoldingState);
         }
     }
     private void jButtonPrintPlaylistActionPerformed(java.awt.event.ActionEvent evt, MP3Player k, StopPlayManager stopPlayManager, Playlist actualPlaylist) {//GEN-FIRST:event_jButtonPrintPlaylistActionPerformed
@@ -585,7 +588,7 @@ public class ProjectForm extends JFrame implements KeyListener{
             k.RepeatMode = true;
         }
     }
-    private void jButtonShuffleActionPerformed(java.awt.event.ActionEvent evt, MP3Player k, StopPlayManager stopPlayManager) {//GEN-FIRST:event_jButtonShuffleActionPerformed
+    private void jButtonShuffleActionPerformed(java.awt.event.ActionEvent evt, MP3Player k, StopPlayManager stopPlayManager, PlayerHoldingState playerHoldingState) {//GEN-FIRST:event_jButtonShuffleActionPerformed
         if(k.filePlaylist!=null)
         {
             Random rnd = new Random();
@@ -593,7 +596,7 @@ public class ProjectForm extends JFrame implements KeyListener{
             {
                 int choice = rnd.nextInt(k.filePlaylist.size());
                 k.fileCurrentlyPlaying = k.filePlaylist.get(choice);
-                this.PlaySongFile(k);
+                this.PlaySongFile(k, playerHoldingState);
             }
             else
             {
@@ -601,9 +604,11 @@ public class ProjectForm extends JFrame implements KeyListener{
             }
         }
     }
-    private void jButtonStopActionPerformed(java.awt.event.ActionEvent evt, MP3Player k, StopPlayManager stopPlayManager) {//GEN-FIRST:event_jButtonStopActionPerformed
+    private void jButtonStopActionPerformed(java.awt.event.ActionEvent evt, MP3Player k, StopPlayManager stopPlayManager, PlayerHoldingState playerHoldingState) {//GEN-FIRST:event_jButtonStopActionPerformed
         if(k.a!=null)
         {
+            playerHoldingState.setState(new PlayerPlayState() );
+            playerHoldingState.getState().doAction( playerHoldingState, this, k.a, k);
 //            stopPlayManager.notifySubscribers(k.a);
             k.a.suspend();
             jTextFieldPlayingFile.setText("Stopped on: " + k.fileCurrentlyPlaying.getName());
