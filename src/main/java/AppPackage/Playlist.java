@@ -11,11 +11,12 @@ public class Playlist implements Iterable<Song> {
         return new Iterator<>() {
             public boolean hasNext(){return true;}
             public Song next(){
-                Song song = collectionOfSongs.get(actualPosition);
                 if(actualPosition >= collectionOfSongs.size() - 1)
                     actualPosition = 0;
                 else
                     ++actualPosition;
+
+                Song song = collectionOfSongs.get(actualPosition);
                 return(song);
             }
         };
@@ -24,11 +25,12 @@ public class Playlist implements Iterable<Song> {
         return new Iterator<>() {
             public boolean hasNext(){ return true; }
             public Song next(){
-                Song song = collectionOfSongs.get(actualPosition);
                 if( actualPosition == 0 )
                     actualPosition = collectionOfSongs.size()-1;
                 else
                     --actualPosition;
+
+                Song song = collectionOfSongs.get(actualPosition);
                 return(song);
             }
         };

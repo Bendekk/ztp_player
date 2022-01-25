@@ -9,6 +9,7 @@ import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -42,6 +43,8 @@ public class ProjectForm extends JFrame implements KeyListener{
     boolean isFileBrowsed = false;
     private boolean hidden = true;
     private boolean firstBrowse = true;
+    private Iterator iter;
+    private Iterator iterPrevious;
     PauseCommand pauseCommand = new PauseCommand();
     PlayCommand playCommand = new PlayCommand();
 
@@ -83,6 +86,8 @@ public class ProjectForm extends JFrame implements KeyListener{
 
         StopPlayManager stopPlayManager = new StopPlayManager();
         Playlist actualPlaylist = new Playlist();
+        iter = actualPlaylist.iterator();
+        iterPrevious = actualPlaylist.iteratorToPrevious();
         PlayerHoldingState playerHoldingState = new PlayerHoldingState( new PlayerPauseState() );
 
         this.setContentPane(panel1);
@@ -216,6 +221,7 @@ public class ProjectForm extends JFrame implements KeyListener{
                 assignToJList(actualPlaylist);
             }
         });
+        jButtonBrowsePlaylists(stopPlayManager, actualPlaylist);
     }
 
     private void assignToJList(Playlist playlist) {
@@ -340,6 +346,9 @@ public class ProjectForm extends JFrame implements KeyListener{
         JFileChooser fileChooser = new JFileChooser();
         isFileBrowsed = true;
         isPlaylistBrowsed = false;
+
+        fileChooser.setFileFilter(new FileNameExtensionFilter("MP3 Files", "mp3"));
+
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             mp3Player.fileCurrentlyPlaying = fileChooser.getSelectedFile();
             this.jTextFieldPlayingFile.setText("Selected: " + mp3Player.fileCurrentlyPlaying.getName());
@@ -380,33 +389,12 @@ public class ProjectForm extends JFrame implements KeyListener{
     private void jButtonPauseActionPerformed(PlayerHoldingState playerHoldingState) {pauseCommand.execute(this, mp3Player, playerHoldingState);}
 
     private void jButtonPreviousSongActionPerformed(StopPlayManager stopPlayManager, Playlist actualPlaylist, PlayerHoldingState playerHoldingState) {
-        if(mp3Player.fileCurrentlyPlaying!=null && !mp3Player.filePlaylist.isEmpty())
+        if(mp3Player.fileCurrentlyPlaying!=null && !actualPlaylist.getCollectionOfSongs().isEmpty())
         {
-            boolean selectionDone = false;
-            Iterator iteratorToPrevious = actualPlaylist.iteratorToPrevious();
-            while( iteratorToPrevious.hasNext() ){
-                Song song = (Song) iteratorToPrevious.next();
-                File file = song.getFile();
-                if(file.compareTo(mp3Player.fileCurrentlyPlaying)==0)
-                {
-                    int futureIndex = mp3Player.filePlaylist.indexOf(file)-1;
-                    if(futureIndex<0)
-                    {
-                        int index = mp3Player.filePlaylist.size()-1;
-                        mp3Player.fileCurrentlyPlaying = mp3Player.filePlaylist.get(index);
-                    }
-                    else if(futureIndex<mp3Player.filePlaylist.size()-1)
-                    {
-                        int index = futureIndex;
-                        mp3Player.fileCurrentlyPlaying = mp3Player.filePlaylist.get(futureIndex);
-                    }
-                    selectionDone = true;
-                    break;
-                }
-            }
-            if(!selectionDone)
-            {
-                mp3Player.fileCurrentlyPlaying = mp3Player.filePlaylist.get(0);
+
+            if( iterPrevious.hasNext() ){
+                Song song = (Song) iterPrevious.next();
+                mp3Player.fileCurrentlyPlaying = song.getFile();
             }
         }
         if(mp3Player.a!=null && mp3Player.fileCurrentlyPlaying!=null)
@@ -415,20 +403,11 @@ public class ProjectForm extends JFrame implements KeyListener{
         }
     }
     private void jButtonNextSongActionPerformed(StopPlayManager stopPlayManager, Playlist actualPlaylist, PlayerHoldingState playerHoldingState) {//GEN-FIRST:event_jButtonNextSongActionPerformed
-        if( mp3Player.fileCurrentlyPlaying != null && !mp3Player.filePlaylist.isEmpty() )
+        if( mp3Player.fileCurrentlyPlaying != null && !actualPlaylist.getCollectionOfSongs().isEmpty() )
         {
-            Iterator iter = actualPlaylist.iterator();
-            while( iter.hasNext() ){
+            if ( iter.hasNext() ){
                 Song song = (Song) iter.next();
-                File file = song.getFile();
-                if( file.compareTo(mp3Player.fileCurrentlyPlaying) == 0 ){
-                    int futureIndex = mp3Player.filePlaylist.indexOf( file );
-                    if(futureIndex<mp3Player.filePlaylist.size()-1)
-                        mp3Player.fileCurrentlyPlaying = mp3Player.filePlaylist.get(futureIndex+1);
-                    else
-                        mp3Player.fileCurrentlyPlaying = mp3Player.filePlaylist.get(0);
-                    break;
-                }
+                mp3Player.fileCurrentlyPlaying = song.getFile();
             }
         }
         if(mp3Player.a!=null && mp3Player.fileCurrentlyPlaying!=null)
