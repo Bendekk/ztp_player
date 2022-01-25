@@ -3,7 +3,10 @@ package AppPackage;
 import AppPackage.sort.DurationSort;
 import AppPackage.sort.NameSort;
 import AppPackage.sort.SongSortStrategy;
-import AppPackage.sort.YearSort;
+import AppPackage.sort.ArtistSort;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.Mp3File;
+import com.mpatric.mp3agic.UnsupportedTagException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -187,7 +190,7 @@ public class ProjectForm extends JFrame implements KeyListener{
         });
         jButtonClearPlaylist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonClearPlaylistActionPerformed(evt, k, stopPlayManager);
+                jButtonClearPlaylistActionPerformed(evt, k, stopPlayManager, actualPlaylist);
                 jButtonClearPlaylist.setSelected(false);
             }
         });
@@ -278,7 +281,7 @@ public class ProjectForm extends JFrame implements KeyListener{
         sortByYear.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                songSortStrategy = new YearSort();
+                songSortStrategy = new ArtistSort();
                 songSortStrategy.sort(actualPlaylist);
                 assignToJList(actualPlaylist);
             }
@@ -286,8 +289,14 @@ public class ProjectForm extends JFrame implements KeyListener{
     }
 
     private void assignToJList(Playlist playlist) {
-//        jListPlaylist.setListData(playlist.getCollectionOfSongs().toArray());
-        jListPlaylist.setListData(playlist.getCollectionOfSongs().stream().map(Song::getName).toArray());
+        ArrayList<String> allSongs = new ArrayList<>();
+        for (Song s : playlist.getCollectionOfSongs()) {
+            System.out.println(s.getName());
+            System.out.println("----------------");
+            allSongs.add(s.getName());
+        }
+
+        jListPlaylist.setListData(allSongs.toArray());
         jListPlaylist.revalidate();
         jListPlaylist.repaint();
     }
@@ -318,11 +327,30 @@ public class ProjectForm extends JFrame implements KeyListener{
             }
             if (k.filePlaylist != null) {
                 boolean first = true;
+                actualPlaylist.clear();
                 for (File s : k.filePlaylist) {
+                    System.out.println(s.getName());
 //                    if( first )
 //                        k.fileCurrentlyPlaying = s;
                     first = false;
-                    Song newSong = new Song(s.getName(), 500, new Date(), s);
+                    Mp3File mp3file = null;
+                    int duration = 0;
+                    String artist = "Unknown";
+                    try {
+                        mp3file = new Mp3File(s.getAbsolutePath());
+                        System.out.println("duration:" + mp3file.getLengthInSeconds());
+                        if (mp3file != null &&  mp3file.hasId3v2Tag()) {
+                            duration = (int) mp3file.getLengthInSeconds();
+                            artist = mp3file.getId3v2Tag().getArtist();
+                        }
+                    } catch (InvalidDataException e) {
+                        e.printStackTrace();
+                    } catch (UnsupportedTagException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } ;
+                    Song newSong = new Song(s.getName(), duration, artist, s);
                     stopPlayManager.subscribe(newSong);
                     actualPlaylist.addToPlaylist(newSong);
                 }
@@ -410,12 +438,14 @@ public class ProjectForm extends JFrame implements KeyListener{
         }
     }
 
-    private void jButtonClearPlaylistActionPerformed(java.awt.event.ActionEvent evt, MP3Player k, StopPlayManager stopPlayManager) {//GEN-FIRST:event_jButtonClearPlaylistActionPerformed
+    private void jButtonClearPlaylistActionPerformed(java.awt.event.ActionEvent evt, MP3Player k, StopPlayManager stopPlayManager, Playlist actualPlaylist) {//GEN-FIRST:event_jButtonClearPlaylistActionPerformed
         if(k.filePlaylist!=null)
         {
 //          design pattern
 //            stopPlayManager.notifySubscribers(k.a);
+
             k.filePlaylist.clear();
+            actualPlaylist.clear();
             this.WritePlaylistFile(k);
             this.DrawPlaylist(k);
         }

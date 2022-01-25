@@ -35,6 +35,10 @@ public class Playlist implements Iterable<Song> {
         };
     }
 
+    public void clear(){
+        collectionOfSongs.clear();
+    }
+
     public ArrayList<Song> getCollectionOfSongs() {
         return collectionOfSongs;
     }

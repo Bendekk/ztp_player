@@ -6,13 +6,13 @@ import java.util.Date;
 public class Song {
     private String name;
     private Integer duration;
-    private Date year;
     private File file;
+    private String artist;
 
-    public Song(String name, Integer duration, Date year, File file) {
+    public Song(String name, Integer duration, String artist, File file) {
         this.name = name;
         this.duration = duration;
-        this.year = year;
+        this.artist = artist;
         this.file = file;
     }
 
@@ -32,12 +32,12 @@ public class Song {
         this.duration = duration;
     }
 
-    public Date getYear() {
-        return year;
+    public String getArtist() {
+        return artist;
     }
 
-    public void setYear(Date year) {
-        this.year = year;
+    public void setArtist(String artist) {
+        this.artist = artist;
     }
 
     public void setFile(File file) {
