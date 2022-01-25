@@ -1,8 +1,6 @@
 package AppPackage;
 
 import javazoom.jl.player.Player;
-
-import javax.swing.*;
 import java.io.FileInputStream;
 
 public class PlayCommand extends AlternateCommand {
@@ -23,7 +21,6 @@ public class PlayCommand extends AlternateCommand {
                             frame.jTextFieldPlayingFile.setText("Playing: " + k.fileCurrentlyPlaying.getName());
                             k.myplayer.play();
                             k.Browsed = false;
-                            System.out.println("hih");
                         }
                     }
                 }

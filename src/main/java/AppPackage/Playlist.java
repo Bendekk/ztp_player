@@ -11,9 +11,6 @@ public class Playlist implements Iterable<Song> {
         return new Iterator<>() {
             public boolean hasNext(){return true;}
             public Song next(){
-                for(Song s : collectionOfSongs){
-                    System.out.println(s.getName());
-                }
                 Song song = collectionOfSongs.get(actualPosition);
                 if(actualPosition >= collectionOfSongs.size() - 1)
                     actualPosition = 0;
@@ -27,7 +24,6 @@ public class Playlist implements Iterable<Song> {
         return new Iterator<>() {
             public boolean hasNext(){ return true; }
             public Song next(){
-                System.out.println( "pozycja " +actualPosition);
                 Song song = collectionOfSongs.get(actualPosition);
                 if( actualPosition == 0 )
                     actualPosition = collectionOfSongs.size()-1;
