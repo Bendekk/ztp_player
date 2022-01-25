@@ -40,6 +40,7 @@ public class ProjectForm extends JFrame implements KeyListener{
     boolean isPlaylistBrowsed = false;
     boolean isFileBrowsed = false;
     private boolean hidden = true;
+    private boolean firstBrowse = true;
     PauseCommand pauseCommand = new PauseCommand();
     PlayCommand playCommand = new PlayCommand();
 
@@ -280,7 +281,7 @@ public class ProjectForm extends JFrame implements KeyListener{
     }
     private void jButtonAddToPlaylistActionPerformed(StopPlayManager stopPlayManager, Playlist actualPlaylist) {//GEN-FIRST:event_jButtonAddToPlaylistActionPerformed
         boolean GoFurther = true;
-        this.ReadPlaylistFile(stopPlayManager, actualPlaylist);
+        //this.ReadPlaylistFile(stopPlayManager, actualPlaylist);
         if( isFileBrowsed) {
             if (mp3Player.fileCurrentlyPlaying != null) {
                 if (mp3Player.filePlaylist == null) {
@@ -536,6 +537,10 @@ public class ProjectForm extends JFrame implements KeyListener{
             if(mp3Player.filePlaylist!=null && !mp3Player.filePlaylist.isEmpty())
                 if(mp3Player.filePlaylist.get(0)!=null)
                     mp3Player.fileCurrentlyPlaying=mp3Player.filePlaylist.get(0);
+            firstBrowse = false;
+        } else {
+            if (firstBrowse)
+                System.exit(69);
         }
     }
 }
