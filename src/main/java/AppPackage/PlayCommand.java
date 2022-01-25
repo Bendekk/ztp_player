@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 
 public class PlayCommand extends AlternateCommand {
     @Override
-    public void execute(ProjectForm frame, Thread a, MP3Player k, PlayerHoldingState playerHoldingState) {
+    public void execute(ProjectForm frame, MP3Player k, PlayerHoldingState playerHoldingState) {
         if(k.a!=null) {
             if(k.a.isAlive()) {
                 k.a.stop();

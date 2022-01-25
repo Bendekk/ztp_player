@@ -10,14 +10,16 @@ public class MP3Player extends javax.swing.JFrame {
     public Player myplayer;
     public File fileCurrentlyPlaying;
     public ArrayList<File> filePlaylist = new ArrayList();
-    public File playlistPhysicalFile = new File("playlist.txt");
+    public File playlistPhysicalFile;
     public static Thread a;
     public static boolean RepeatMode;
     public boolean Browsed;
     private Thread b;
 
     public MP3Player() throws InvalidDataException, UnsupportedTagException, IOException {
+
         ProjectForm p = new ProjectForm(this);
+
     }
 
     public static void main(String[] args) {
