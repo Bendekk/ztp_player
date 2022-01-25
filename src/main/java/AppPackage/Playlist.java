@@ -44,6 +44,10 @@ public class Playlist implements Iterable<Song> {
         return collectionOfSongs;
     }
 
+    public void setCollectionOfSongs(ArrayList<Song> collectionOfSongs) {
+        this.collectionOfSongs = collectionOfSongs;
+    }
+
     public void addToPlaylist(Song song){
         collectionOfSongs.add(song);
     }

@@ -270,7 +270,8 @@ public class ProjectForm extends JFrame implements KeyListener{
                         System.out.println("duration:" + mp3file.getLengthInSeconds());
                         if (mp3file != null &&  mp3file.hasId3v2Tag()) {
                             duration = (int) mp3file.getLengthInSeconds();
-                            artist = mp3file.getId3v2Tag().getArtist();
+                            if (mp3file.getId3v2Tag().getArtist() != null)
+                                artist = mp3file.getId3v2Tag().getArtist();
                         }
                     } catch (InvalidDataException e) {
                         e.printStackTrace();
@@ -288,7 +289,7 @@ public class ProjectForm extends JFrame implements KeyListener{
     }
     private void jButtonAddToPlaylistActionPerformed(StopPlayManager stopPlayManager, Playlist actualPlaylist) {//GEN-FIRST:event_jButtonAddToPlaylistActionPerformed
         boolean GoFurther = true;
-        //this.ReadPlaylistFile(stopPlayManager, actualPlaylist);
+
         if( isFileBrowsed) {
             if (mp3Player.fileCurrentlyPlaying != null) {
                 if (mp3Player.filePlaylist == null) {
@@ -308,6 +309,7 @@ public class ProjectForm extends JFrame implements KeyListener{
         }
         else
             System.out.printf("Can't add playlist to playlist, you dumb dumb!\n");
+        this.ReadPlaylistFile(stopPlayManager, actualPlaylist);
     }
     private void WritePlaylistFile() {
         if(mp3Player.filePlaylist!=null) {
