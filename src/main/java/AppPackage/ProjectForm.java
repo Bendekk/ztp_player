@@ -1,7 +1,9 @@
 package AppPackage;
 
+import AppPackage.sort.DurationSort;
 import AppPackage.sort.NameSort;
 import AppPackage.sort.SongSortStrategy;
+import AppPackage.sort.YearSort;
 
 import javax.swing.*;
 import java.awt.*;
@@ -268,13 +270,17 @@ public class ProjectForm extends JFrame implements KeyListener{
         sortByDuration.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                songSortStrategy = new DurationSort();
+                songSortStrategy.sort(actualPlaylist);
+                assignToJList(actualPlaylist);
             }
         });
         sortByYear.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                songSortStrategy = new YearSort();
+                songSortStrategy.sort(actualPlaylist);
+                assignToJList(actualPlaylist);
             }
         });
     }
