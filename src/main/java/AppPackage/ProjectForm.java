@@ -36,6 +36,7 @@ public class ProjectForm extends JFrame implements KeyListener{
     private JButton sortByName;
     private JButton sortByYear;
     private JButton sortByDuration;
+    private JPanel backgroundPanel;
     boolean isLightModeOn = false;
     boolean isPlaylistBrowsed = false;
     boolean isFileBrowsed = false;
@@ -44,8 +45,7 @@ public class ProjectForm extends JFrame implements KeyListener{
     PauseCommand pauseCommand = new PauseCommand();
     PlayCommand playCommand = new PlayCommand();
 
-    ThemedFrame lightThemeFrame = new LightThemeFrame();
-    ThemedFrame darkThemeFrame = new DarkThemeFrame();
+    private ThemedFrame themedFrame;
     private int displayHeight = 525;
     private SongSortStrategy songSortStrategy;
     MP3Player mp3Player;
@@ -78,7 +78,8 @@ public class ProjectForm extends JFrame implements KeyListener{
         mp3Player = k;
         thisFrame = this;
 
-        darkThemeFrame.changeTheme(this);
+        themedFrame = DarkThemeFrame.getDarkThemeFrame();
+        themedFrame.changeTheme(thisFrame);
 
         StopPlayManager stopPlayManager = new StopPlayManager();
         Playlist actualPlaylist = new Playlist();
@@ -486,18 +487,18 @@ public class ProjectForm extends JFrame implements KeyListener{
         }
     }
     private void jButtonSetColorMode() {
-        if(isLightModeOn) {
-            darkThemeFrame.changeTheme(this);
-            isLightModeOn = false;
-        }
-        else {
-            lightThemeFrame.changeTheme(this);
-            isLightModeOn = true;
-        }
+        if(isLightModeOn)
+            themedFrame = DarkThemeFrame.getDarkThemeFrame();
+        else
+            themedFrame = LightThemeFrame.getLightThemeFrame();
+
+        themedFrame.changeTheme(this);
+        isLightModeOn = !isLightModeOn;
     }
     public LinkedList<JComponent> returnAllThemeComponents(){
         LinkedList<JComponent> components = new LinkedList<>();
         components.push(panel1);
+        components.push(backgroundPanel);
         components.push(jButtonClearPlaylist);
         components.push(jButtonPlay);
         components.push(jButtonPreviousSong);
@@ -513,6 +514,11 @@ public class ProjectForm extends JFrame implements KeyListener{
         components.push(jListPlaylist);
         components.push(jTextFieldPlayingFile);
         components.push(jButtonColorMode);
+        components.push(jButtonBrowsePlaylist);
+        components.push(scrollPane);
+        components.push(sortByName);
+        components.push(sortByYear);
+        components.push(sortByDuration);
         return components;
     }
     public void keyTyped(KeyEvent e) {
