@@ -20,6 +20,7 @@ public class PlayCommand extends AlternateCommand {
                         if(k.myplayer != null) {
                             frame.jTextFieldPlayingFile.setText("Playing: " + k.fileCurrentlyPlaying.getName());
                             k.myplayer.play();
+                            System.out.println("hih");
                             k.Browsed = false;
                         }
                     }

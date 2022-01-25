@@ -43,6 +43,7 @@ public class ProjectForm extends JFrame implements KeyListener{
     boolean isFileBrowsed = false;
     private boolean hidden = true;
     private boolean firstBrowse = true;
+    private ReadPlaylistFacade readPlaylistFacade;
     private Iterator iter;
     private Iterator iterPrevious;
     PauseCommand pauseCommand = new PauseCommand();
@@ -80,6 +81,7 @@ public class ProjectForm extends JFrame implements KeyListener{
     public ProjectForm(MP3Player k){
         mp3Player = k;
         thisFrame = this;
+        readPlaylistFacade = new ReadPlaylistFacade();
 
         themedFrame = DarkThemeFrame.getDarkThemeFrame();
         themedFrame.changeTheme(thisFrame);
@@ -104,8 +106,7 @@ public class ProjectForm extends JFrame implements KeyListener{
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         mp3Player.playlistPhysicalFile = new File("playlist.txt");
-        this.ReadPlaylistFile(stopPlayManager, actualPlaylist);
-        
+        readPlaylistFacade.read(mp3Player, stopPlayManager, actualPlaylist);
         if(mp3Player.filePlaylist!=null && !mp3Player.filePlaylist.isEmpty())
             if(mp3Player.filePlaylist.get(0)!=null)
                 mp3Player.fileCurrentlyPlaying=mp3Player.filePlaylist.get(0);
@@ -309,7 +310,7 @@ public class ProjectForm extends JFrame implements KeyListener{
         }
         else
             System.out.printf("Can't add playlist to playlist, you dumb dumb!\n");
-        this.ReadPlaylistFile(stopPlayManager, actualPlaylist);
+        readPlaylistFacade.read(mp3Player, stopPlayManager, actualPlaylist);
     }
     private void WritePlaylistFile() {
         if(mp3Player.filePlaylist!=null) {
@@ -418,7 +419,7 @@ public class ProjectForm extends JFrame implements KeyListener{
         }
     }
     private void jButtonPrintPlaylistActionPerformed(StopPlayManager stopPlayManager, Playlist actualPlaylist) {
-        this.ReadPlaylistFile(stopPlayManager, actualPlaylist);
+        readPlaylistFacade.read(mp3Player, stopPlayManager, actualPlaylist);
         if(mp3Player.filePlaylist!=null && !mp3Player.filePlaylist.isEmpty()){
             System.out.printf("Playlist Content: \n\n");
             for(File s: mp3Player.filePlaylist){
@@ -519,7 +520,7 @@ public class ProjectForm extends JFrame implements KeyListener{
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             mp3Player.playlistPhysicalFile = new File( fileChooser.getSelectedFile().getAbsolutePath() );
             this.jTextFieldPlayingFile.setText("Selected playlist: " + fileChooser.getSelectedFile().getName() );
-            this.ReadPlaylistFile(stopPlayManager, actualPlaylist);
+            readPlaylistFacade.read(mp3Player, stopPlayManager, actualPlaylist);
             this.DrawPlaylist();
             if(mp3Player.filePlaylist!=null && !mp3Player.filePlaylist.isEmpty())
                 if(mp3Player.filePlaylist.get(0)!=null)
