@@ -2,7 +2,6 @@ package AppPackage;
 
 public class PlayState extends State {
 
-
     PlayState(MP3Player mp3Player) {
         super(mp3Player);
     }

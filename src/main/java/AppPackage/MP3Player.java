@@ -754,12 +754,12 @@ public class MP3Player extends javax.swing.JFrame {
     private void jButtonDisplayPlaylistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDisplayPlaylistActionPerformed
         if(this.jButtonDisplayPlaylist.getText().compareTo("Display Playlist")==0)
         {
-            this.setSize(695, 288);
+            this.setSize(695, 388);
             this.jButtonDisplayPlaylist.setText("Hide Playlist");
         }
         else
         {
-            this.setSize(377, 288);
+            this.setSize(377, 388);
             this.jButtonDisplayPlaylist.setText("Display Playlist");
         }
     }//GEN-LAST:event_jButtonDisplayPlaylistActionPerformed

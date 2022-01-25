@@ -2,7 +2,6 @@ package AppPackage;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 
 public class Playlist implements Iterable<Song> {
     private ArrayList<Song> collectionOfSongs = new ArrayList<>();
