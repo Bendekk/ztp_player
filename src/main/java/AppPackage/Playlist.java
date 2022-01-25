@@ -9,8 +9,11 @@ public class Playlist implements Iterable<Song> {
 
     public Iterator<Song> iterator(){
         return new Iterator<>() {
-            public boolean hasNext(){ return true; }
+            public boolean hasNext(){return true;}
             public Song next(){
+                for(Song s : collectionOfSongs){
+                    System.out.println(s.getName());
+                }
                 Song song = collectionOfSongs.get(actualPosition);
                 if(actualPosition >= collectionOfSongs.size() - 1)
                     actualPosition = 0;

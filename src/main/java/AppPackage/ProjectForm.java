@@ -303,7 +303,10 @@ public class ProjectForm extends JFrame implements KeyListener{
 
     private void ReadPlaylistFile(MP3Player k, StopPlayManager stopPlayManager, Playlist actualPlaylist)
     {
-        if(k.filePlaylist!=null) {
+        if(k.filePlaylist == null){
+            k.filePlaylist = new ArrayList<>();
+        }
+        if(k.filePlaylist != null) {
             k.filePlaylist.clear();
             stopPlayManager.unsubscribeAll();
             try {
@@ -325,13 +328,13 @@ public class ProjectForm extends JFrame implements KeyListener{
             } catch (ClassNotFoundException e) {
                 System.out.println("CNF exception");
             }
-            if (k.filePlaylist != null) {
+            if (!k.filePlaylist.isEmpty()) {
                 boolean first = true;
                 actualPlaylist.clear();
                 for (File s : k.filePlaylist) {
                     System.out.println(s.getName());
-//                    if( first )
-//                        k.fileCurrentlyPlaying = s;
+                    //if( first )
+                       // k.fileCurrentlyPlaying = s;
                     first = false;
                     Mp3File mp3file = null;
                     int duration = 0;
@@ -353,6 +356,9 @@ public class ProjectForm extends JFrame implements KeyListener{
                     Song newSong = new Song(s.getName(), duration, artist, s);
                     stopPlayManager.subscribe(newSong);
                     actualPlaylist.addToPlaylist(newSong);
+                }
+                for(Song s : actualPlaylist.getCollectionOfSongs()){
+                    System.out.println(s.getName());
                 }
             }
         }
@@ -739,11 +745,14 @@ public class ProjectForm extends JFrame implements KeyListener{
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 //            stopPlayManager.unsubscribeAll();
 
-            k.playlistPhysicalFile = new File( fileChooser.getSelectedFile().getName() );
+            k.playlistPhysicalFile = new File( fileChooser.getSelectedFile().getAbsolutePath() );
             this.jTextFieldPlayingFile.setText("Selected playlist: " + fileChooser.getSelectedFile().getName() );
             // load from file
             this.ReadPlaylistFile(k, stopPlayManager, actualPlaylist);
             this.DrawPlaylist(k);
+            if(k.filePlaylist!=null && !k.filePlaylist.isEmpty())
+                if(k.filePlaylist.get(0)!=null)
+                    k.fileCurrentlyPlaying=k.filePlaylist.get(0);
         }
     }
 //    public class ProjectForm(){
