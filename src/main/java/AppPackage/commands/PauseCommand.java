@@ -8,7 +8,7 @@ public class PauseCommand implements AlternateCommand {
     @Override
     public void execute(ProjectForm frame, MP3Player mp3Player ) {
         if( mp3Player.getA() != null ) {
-            PlayerHoldingState playerHoldingState = frame.getPlayerHoldingState();
+            PlayerHoldingState playerHoldingState = mp3Player.getPlayerHoldingState();
             playerHoldingState.getState().doAction( playerHoldingState, frame, mp3Player);
         }
     }

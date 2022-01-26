@@ -15,7 +15,7 @@ public class AddToPlaylistCommand implements AlternateCommand {
                     mp3Player.setFilePlaylist( new ArrayList() );
                 }
                 if (!mp3Player.getFilePlaylist().isEmpty()) {
-                    GoFurther = frame.getCheckForDuplicatesManager().notifySubscribers(mp3Player.getFileCurrentlyPlaying().getName());
+                    GoFurther = mp3Player.getCheckForDuplicatesManager().notifySubscribers(mp3Player.getFileCurrentlyPlaying().getName());
                 }
                 if (GoFurther) {
                     mp3Player.getFilePlaylist().add( mp3Player.getFileCurrentlyPlaying() );
@@ -28,6 +28,6 @@ public class AddToPlaylistCommand implements AlternateCommand {
         }
         else
             System.out.printf("Can't add playlist to playlist, you dumb dumb!\n");
-        frame.getReadPlaylistFacade().read(mp3Player, frame.getCheckForDuplicatesManager(), frame.getActualPlaylist());
+        mp3Player.getReadPlaylistFacade().read(mp3Player, mp3Player.getCheckForDuplicatesManager(), mp3Player.getActualPlaylist());
     }
 }

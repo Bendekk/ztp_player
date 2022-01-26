@@ -8,9 +8,9 @@ import AppPackage.ProjectForm;
 public class PreviousSongCommand implements AlternateCommand {
     @Override
     public void execute(ProjectForm frame, MP3Player mp3Player) {
-            if( mp3Player.getFileCurrentlyPlaying() != null && !frame.getActualPlaylist().getCollectionOfSongs().isEmpty() ) {
-                if( frame.getIterPrevious().hasNext() ){
-                    Song song = frame.getIterPrevious().next();
+            if( mp3Player.getFileCurrentlyPlaying() != null && !mp3Player.getActualPlaylist().getCollectionOfSongs().isEmpty() ) {
+                if( mp3Player.getIterPrevious().hasNext() ){
+                    Song song = mp3Player.getIterPrevious().next();
                     mp3Player.setFileCurrentlyPlaying( song.getFile() );
                 }
             }

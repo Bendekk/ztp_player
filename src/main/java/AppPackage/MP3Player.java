@@ -1,6 +1,13 @@
 package AppPackage;
 
+import AppPackage.facade.ReadPlaylistFacade;
+import AppPackage.iterator.Playlist;
 import AppPackage.observer.CheckForDuplicatesManager;
+import AppPackage.proxy.LabelChangingProxy;
+import AppPackage.proxy.PrintingPlaylistOnJlist;
+import AppPackage.proxy.ProxyInterface;
+import AppPackage.state.PlayerHoldingState;
+import AppPackage.state.PlayerPauseState;
 import com.mpatric.mp3agic.*;
 import java.io.File;
 import java.io.*;
@@ -14,12 +21,34 @@ public class MP3Player extends javax.swing.JFrame {
     private ArrayList<File> filePlaylist = new ArrayList();
     private File playlistPhysicalFile;
     private static Thread a;
+    private ReadPlaylistFacade readPlaylistFacade;
+    private Iterator iter;
+    private Iterator iterPrevious;
+    private ProxyInterface colorSelectedProxy;
+    private Playlist actualPlaylist;
+    private CheckForDuplicatesManager checkForDuplicatesManager;
+    private PlayerHoldingState playerHoldingState;
 
     public MP3Player() throws InvalidDataException, UnsupportedTagException, IOException {
+        checkForDuplicatesManager = new CheckForDuplicatesManager();
+        actualPlaylist = new Playlist();
+        iter = actualPlaylist.iterator();
+        iterPrevious = actualPlaylist.iteratorToPrevious();
+        playerHoldingState = new PlayerHoldingState( new PlayerPauseState() );
+        readPlaylistFacade = new ReadPlaylistFacade();
+        colorSelectedProxy = new LabelChangingProxy( new PrintingPlaylistOnJlist() );
+        setPlaylistPhysicalFile( new File( "playlist.txt" ) );
+        readPlaylistFacade.read(this, checkForDuplicatesManager, actualPlaylist);
+        if( this.getFilePlaylist() != null && !this.getFilePlaylist().isEmpty() )
+            if( this.getFilePlaylist().get(0) != null)
+                this.setFileCurrentlyPlaying( this.getFilePlaylist().get(0) );
+
         ProjectForm p = new ProjectForm(this);
+
     }
 
     public static void main(String[] args) {
+
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -73,4 +102,11 @@ public class MP3Player extends javax.swing.JFrame {
     public ArrayList<File> getFilePlaylist() {return filePlaylist;}
     public void setFilePlaylist(ArrayList<File> filePlaylist) {this.filePlaylist = filePlaylist;}
 
+    public Iterator<Song> getIter() { return iter; }
+    public Iterator<Song> getIterPrevious() { return iterPrevious; }
+    public Playlist getActualPlaylist() {return actualPlaylist; }
+    public PlayerHoldingState getPlayerHoldingState() { return playerHoldingState; }
+    public ReadPlaylistFacade getReadPlaylistFacade() { return readPlaylistFacade; }
+    public CheckForDuplicatesManager getCheckForDuplicatesManager() { return checkForDuplicatesManager; }
+    public ProxyInterface getColorSelectedProxy() { return colorSelectedProxy; }
 }

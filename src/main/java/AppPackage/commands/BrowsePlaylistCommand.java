@@ -14,7 +14,7 @@ public class BrowsePlaylistCommand implements AlternateCommand{
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             mp3Player.setPlaylistPhysicalFile( new File( fileChooser.getSelectedFile().getAbsolutePath() ) );
             frame.getjTextFieldPlayingFile().setText("Selected playlist: " + fileChooser.getSelectedFile().getName() );
-            frame.getReadPlaylistFacade().read(mp3Player, frame.getCheckForDuplicatesManager(), frame.getActualPlaylist() );
+            mp3Player.getReadPlaylistFacade().read(mp3Player, mp3Player.getCheckForDuplicatesManager(), mp3Player.getActualPlaylist() );
             frame.DrawPlaylist();
             if( mp3Player.getFilePlaylist() != null && !mp3Player.getFilePlaylist().isEmpty() )
                 if( mp3Player.getFilePlaylist().get(0) != null )

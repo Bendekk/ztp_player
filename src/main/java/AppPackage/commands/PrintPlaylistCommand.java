@@ -8,7 +8,7 @@ import java.io.File;
 public class PrintPlaylistCommand implements AlternateCommand{
     @Override
     public void execute(ProjectForm frame, MP3Player mp3Player) {
-        frame.getReadPlaylistFacade().read( mp3Player, frame.getCheckForDuplicatesManager(), frame.getActualPlaylist() );
+        mp3Player.getReadPlaylistFacade().read( mp3Player, mp3Player.getCheckForDuplicatesManager(), mp3Player.getActualPlaylist() );
         if (mp3Player.getFilePlaylist() != null && !mp3Player.getFilePlaylist().isEmpty()) {
             System.out.printf("Playlist Content: \n\n");
             for (File s : mp3Player.getFilePlaylist()) {

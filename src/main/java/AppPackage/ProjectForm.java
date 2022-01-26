@@ -1,25 +1,15 @@
 package AppPackage;
 
 import AppPackage.commands.*;
-import AppPackage.facade.ReadPlaylistFacade;
 import AppPackage.factoryMethodSingleton.DarkThemeFrame;
 import AppPackage.factoryMethodSingleton.LightThemeFrame;
 import AppPackage.factoryMethodSingleton.ThemedFrame;
-import AppPackage.iterator.Playlist;
-import AppPackage.observer.CheckForDuplicatesManager;
-import AppPackage.proxy.LabelChangingProxy;
-import AppPackage.proxy.PrintingPlaylistOnJlist;
-import AppPackage.proxy.ProxyInterface;
 import AppPackage.sortStrategy.DurationSort;
 import AppPackage.sortStrategy.NameSort;
 import AppPackage.sortStrategy.SongSortStrategy;
 import AppPackage.sortStrategy.ArtistSort;
-import AppPackage.state.PlayerHoldingState;
-import AppPackage.state.PlayerPauseState;
-import AppPackage.state.PlayerPlayState;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -57,17 +47,6 @@ public class ProjectForm extends JFrame implements KeyListener{
     private boolean hidden = true;
     private boolean firstBrowse = true;
 
-    private ReadPlaylistFacade readPlaylistFacade;
-    private Iterator iter;
-    private Iterator iterPrevious;
-    private ProxyInterface colorSelectedProxy;
-
-    private Playlist actualPlaylist;
-
-    private CheckForDuplicatesManager checkForDuplicatesManager;
-
-    private PlayerHoldingState playerHoldingState;
-
     private ThemedFrame themedFrame;
 
     private int displayHeight = 525;
@@ -94,17 +73,10 @@ public class ProjectForm extends JFrame implements KeyListener{
     public ProjectForm(MP3Player k){
         mp3Player = k;
         thisFrame = this;
-        readPlaylistFacade = new ReadPlaylistFacade();
-        colorSelectedProxy = new LabelChangingProxy( new PrintingPlaylistOnJlist() );
+
         themedFrame = DarkThemeFrame.getDarkThemeFrame();
         themedFrame.changeTheme(thisFrame);
         sortlabel.setVisible(false);
-
-        checkForDuplicatesManager = new CheckForDuplicatesManager();
-        actualPlaylist = new Playlist();
-        iter = actualPlaylist.iterator();
-        iterPrevious = actualPlaylist.iteratorToPrevious();
-        playerHoldingState = new PlayerHoldingState( new PlayerPauseState() );
 
         this.setContentPane(panel1);
         KeyEventDispatcher listener = new MyKeyListener();
@@ -119,18 +91,11 @@ public class ProjectForm extends JFrame implements KeyListener{
         this.revalidate();
         this.repaint();
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-        mp3Player.setPlaylistPhysicalFile( new File( "playlist.txt" ) );
-        readPlaylistFacade.read(mp3Player, checkForDuplicatesManager, actualPlaylist);
-        if( mp3Player.getFilePlaylist() != null && !mp3Player.getFilePlaylist().isEmpty() )
-            if( mp3Player.getFilePlaylist().get(0) != null)
-                mp3Player.setFileCurrentlyPlaying( mp3Player.getFilePlaylist().get(0) );
-
         this.DrawPlaylist();
+
         addAllActionListeners();
 //      first read a playlist
         executeCommand( new BrowsePlaylistCommand() );
-
     }
 
     public void WritePlaylistFile() {
@@ -215,23 +180,14 @@ public class ProjectForm extends JFrame implements KeyListener{
     public JButton getjButtonPause() {
         return jButtonPause;
     }
-
     public JTextField getjTextFieldPlayingFile() {
         return jTextFieldPlayingFile;
     }
 
-    public Iterator<Song> getIter() { return iter; }
-    public Iterator<Song> getIterPrevious() { return iterPrevious; }
-
-    public Playlist getActualPlaylist() {return actualPlaylist; }
-    private void executeCommand( AlternateCommand command ){ command.execute( thisFrame, mp3Player ); }
     public boolean getIsFileBrowsed() { return isFileBrowsed; }
     public void setIsFileBrowsed(boolean fileBrowsed) { isFileBrowsed = fileBrowsed; }
-    public PlayerHoldingState getPlayerHoldingState() { return playerHoldingState; }
     public boolean getIsFirstBrowse() { return firstBrowse;}
     public void setFirstBrowse(boolean firstBrowse) { this.firstBrowse = firstBrowse; }
-    public ReadPlaylistFacade getReadPlaylistFacade() { return readPlaylistFacade; }
-    public CheckForDuplicatesManager getCheckForDuplicatesManager() { return checkForDuplicatesManager; }
 
     public boolean getIsHidden() { return hidden; }
     public void setHidden(boolean hidden) { this.hidden = hidden; }
@@ -240,6 +196,9 @@ public class ProjectForm extends JFrame implements KeyListener{
 
     public JScrollPane getScrollPane() { return scrollPane; }
     public JLabel getSortlabel() { return sortlabel; }
+
+    private void executeCommand( AlternateCommand command ){ command.execute( thisFrame, mp3Player ); }
+
     public void addAllActionListeners(){
         jButtonPrintPlaylist.addActionListener(new ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -312,24 +271,26 @@ public class ProjectForm extends JFrame implements KeyListener{
             @Override
             public void actionPerformed(ActionEvent e) {
                 songSortStrategy = new NameSort();
-                songSortStrategy.sort(actualPlaylist);
-                colorSelectedProxy.changeJlist( actualPlaylist, jListPlaylist, "Sort by name", sortlabel);
+                songSortStrategy.sort( mp3Player.getActualPlaylist() );
+                mp3Player.getColorSelectedProxy().changeJlist( mp3Player.getActualPlaylist(), jListPlaylist, "Sort by name", sortlabel);
             }
         });
         sortByDuration.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 songSortStrategy = new DurationSort();
-                songSortStrategy.sort(actualPlaylist);
-                colorSelectedProxy.changeJlist( actualPlaylist, jListPlaylist, "Sort by duration", sortlabel );
+                songSortStrategy.sort( mp3Player.getActualPlaylist() );
+                mp3Player.getColorSelectedProxy().changeJlist( mp3Player.getActualPlaylist(), jListPlaylist,
+                        "Sort by duration", sortlabel );
             }
         });
         sortByArtist.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 songSortStrategy = new ArtistSort();
-                songSortStrategy.sort(actualPlaylist);
-                colorSelectedProxy.changeJlist( actualPlaylist, jListPlaylist, "Sort by artist", sortlabel );
+                songSortStrategy.sort( mp3Player.getActualPlaylist() );
+                mp3Player.getColorSelectedProxy().changeJlist( mp3Player.getActualPlaylist(), jListPlaylist,
+                        "Sort by artist", sortlabel );
             }
         });
     }
