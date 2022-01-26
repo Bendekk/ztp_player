@@ -228,22 +228,6 @@ public class ProjectForm extends JFrame implements KeyListener{
         }
         hidden = !hidden;
     }
-    
-    private void jButtonPrintPlaylistActionPerformed(CheckForDuplicatesManager checkForDuplicatesManager, Playlist actualPlaylist) {
-        readPlaylistFacade.read(mp3Player, checkForDuplicatesManager, actualPlaylist);
-        if(mp3Player.getFilePlaylist() != null && !mp3Player.getFilePlaylist().isEmpty() ){
-            System.out.printf("Playlist Content: \n\n");
-            for( File s: mp3Player.getFilePlaylist() ){
-                if(s!=null){
-                    System.out.printf("%s\n", s.getName());
-                }
-            }
-            System.out.printf("\nThere are %d songs in the playlist.\n", mp3Player.getFilePlaylist().size());
-        }
-        else{
-            System.out.printf("Playlist is empty!\n");
-        }
-    }
 
     private void jButtonShuffleActionPerformed(CheckForDuplicatesManager checkForDuplicatesManager, PlayerHoldingState playerHoldingState) {
         if(mp3Player.getFilePlaylist() != null){
@@ -335,20 +319,17 @@ public class ProjectForm extends JFrame implements KeyListener{
     public void addAllActionListeners(){
         jButtonPrintPlaylist.addActionListener(new ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonPrintPlaylistActionPerformed(checkForDuplicatesManager, actualPlaylist);
-                jButtonPrintPlaylist.setFocusPainted(false);
+                executeCommand( new PrintPlaylistCommand() );
             }
         });
         jButtonBrowse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonBrowseActionPerformed();
-                jButtonBrowse.setSelected(false);
             }
         });
         jButtonClearPlaylist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonClearPlaylistActionPerformed(checkForDuplicatesManager, actualPlaylist);
-                jButtonClearPlaylist.setSelected(false);
             }
         });
         jButtonPlay.addActionListener(new java.awt.event.ActionListener() {
@@ -374,33 +355,28 @@ public class ProjectForm extends JFrame implements KeyListener{
         jButtonDisplayPlaylist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonDisplayPlaylistActionPerformed();
-                jButtonDisplayPlaylist.setSelected(false);
             }
         });
 
         jButtonAddToPlaylist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAddToPlaylistActionPerformed(checkForDuplicatesManager, actualPlaylist);
-                jButtonAddToPlaylist.setSelected(false);
             }
         });
 
         jButtonShuffle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonShuffleActionPerformed(checkForDuplicatesManager, playerHoldingState);
-                jButtonShuffle.setSelected(false);
             }
         });
         jButtonStop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonStopActionPerformed(checkForDuplicatesManager, playerHoldingState);
-                jButtonStop.setSelected(false);
             }
         });
         jButtonColorMode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSetColorMode();
-                jButtonColorMode.setSelected(false);
             }
         });
         jButtonBrowsePlaylist.addActionListener(new java.awt.event.ActionListener() {
