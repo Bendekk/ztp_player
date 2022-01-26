@@ -166,18 +166,6 @@ public class ProjectForm extends JFrame implements KeyListener{
             public String getElementAt(int i) { return myString[i]; }
         });
     }
-    private void jButtonBrowseActionPerformed() {
-        JFileChooser fileChooser = new JFileChooser();
-        isFileBrowsed = true;
-
-        fileChooser.setFileFilter(new FileNameExtensionFilter("MP3 Files", "mp3"));
-
-        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            mp3Player.setFileCurrentlyPlaying( fileChooser.getSelectedFile() );
-            this.jTextFieldPlayingFile.setText("Selected: " + mp3Player.getFileCurrentlyPlaying().getName());
-        }
-    }
-
 
     private void jButtonShuffleActionPerformed(CheckForDuplicatesManager checkForDuplicatesManager, PlayerHoldingState playerHoldingState) {
         if(mp3Player.getFilePlaylist() != null){
@@ -259,7 +247,7 @@ public class ProjectForm extends JFrame implements KeyListener{
     public Playlist getActualPlaylist() {return actualPlaylist; }
     private void executeCommand( AlternateCommand command ){ command.execute( thisFrame, mp3Player ); }
     public boolean getIsFileBrowsed() { return isFileBrowsed; }
-    public void setFileBrowsed(boolean fileBrowsed) { isFileBrowsed = fileBrowsed; }
+    public void setIsFileBrowsed(boolean fileBrowsed) { isFileBrowsed = fileBrowsed; }
     public PlayerHoldingState getPlayerHoldingState() { return playerHoldingState; }
     public boolean getIsFirstBrowse() { return firstBrowse;}
     public void setFirstBrowse(boolean firstBrowse) { this.firstBrowse = firstBrowse; }
@@ -281,7 +269,7 @@ public class ProjectForm extends JFrame implements KeyListener{
         });
         jButtonBrowse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonBrowseActionPerformed();
+                executeCommand( new BrowseCommand() );
             }
         });
         jButtonClearPlaylist.addActionListener(new java.awt.event.ActionListener() {

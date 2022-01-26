@@ -9,7 +9,7 @@ import java.io.File;
 
 public class BrowsePlaylistCommand implements AlternateCommand{
     public void execute(ProjectForm frame, MP3Player mp3Player) {
-        frame.setFileBrowsed( false );
+        frame.setIsFileBrowsed( false );
         JFileChooser fileChooser = new JFileChooser();
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             mp3Player.setPlaylistPhysicalFile( new File( fileChooser.getSelectedFile().getAbsolutePath() ) );
