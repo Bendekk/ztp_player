@@ -53,6 +53,7 @@ public class ProjectForm extends JFrame implements KeyListener{
     private boolean isLightModeOn = false;
 
     private boolean isFileBrowsed = false;
+
     private boolean hidden = true;
     private boolean firstBrowse = true;
 
@@ -68,6 +69,7 @@ public class ProjectForm extends JFrame implements KeyListener{
     private PlayerHoldingState playerHoldingState;
 
     private ThemedFrame themedFrame;
+
     private int displayHeight = 525;
     private SongSortStrategy songSortStrategy;
     private MP3Player mp3Player;
@@ -200,25 +202,6 @@ public class ProjectForm extends JFrame implements KeyListener{
         }
     }
 
-    private void jButtonDisplayPlaylistActionPerformed() {
-        if( hidden ) {
-            this.setSize(695, displayHeight);
-            scrollPane.setVisible(true);
-            sortlabel.setVisible(true);
-            this.revalidate();
-            this.repaint();
-            this.jButtonDisplayPlaylist.setText("Hide Playlist");
-        }
-        else{
-            this.setSize(578, displayHeight);
-            scrollPane.setVisible(false);
-            sortlabel.setVisible(false);
-            this.revalidate();
-            this.repaint();
-            this.jButtonDisplayPlaylist.setText("Display Playlist");
-        }
-        hidden = !hidden;
-    }
 
     private void jButtonShuffleActionPerformed(CheckForDuplicatesManager checkForDuplicatesManager, PlayerHoldingState playerHoldingState) {
         if(mp3Player.getFilePlaylist() != null){
@@ -307,6 +290,13 @@ public class ProjectForm extends JFrame implements KeyListener{
     public ReadPlaylistFacade getReadPlaylistFacade() { return readPlaylistFacade; }
     public CheckForDuplicatesManager getCheckForDuplicatesManager() { return checkForDuplicatesManager; }
 
+    public boolean getIsHidden() { return hidden; }
+    public void setHidden(boolean hidden) { this.hidden = hidden; }
+    public int getDisplayHeight() { return displayHeight; }
+    public JButton getjButtonDisplayPlaylist() { return jButtonDisplayPlaylist; }
+
+    public JScrollPane getScrollPane() { return scrollPane; }
+    public JLabel getSortlabel() { return sortlabel; }
     public void addAllActionListeners(){
         jButtonPrintPlaylist.addActionListener(new ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -345,7 +335,7 @@ public class ProjectForm extends JFrame implements KeyListener{
         });
         jButtonDisplayPlaylist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonDisplayPlaylistActionPerformed();
+                executeCommand( new DisplayCommand() );
             }
         });
 
