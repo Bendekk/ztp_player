@@ -1,5 +1,6 @@
 package AppPackage;
 
+import AppPackage.observer.CheckForDuplicatesManager;
 import com.mpatric.mp3agic.*;
 import java.io.File;
 import java.io.*;
@@ -15,9 +16,7 @@ public class MP3Player extends javax.swing.JFrame {
     private static Thread a;
 
     public MP3Player() throws InvalidDataException, UnsupportedTagException, IOException {
-
         ProjectForm p = new ProjectForm(this);
-
     }
 
     public static void main(String[] args) {
@@ -73,4 +72,5 @@ public class MP3Player extends javax.swing.JFrame {
 
     public ArrayList<File> getFilePlaylist() {return filePlaylist;}
     public void setFilePlaylist(ArrayList<File> filePlaylist) {this.filePlaylist = filePlaylist;}
+
 }

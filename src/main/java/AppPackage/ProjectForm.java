@@ -26,6 +26,7 @@ import java.io.*;
 import java.util.*;
 
 public class ProjectForm extends JFrame implements KeyListener{
+
     private JPanel panel1;
     private JButton jButtonClearPlaylist;
     private JButton jButtonPlay;
@@ -50,6 +51,7 @@ public class ProjectForm extends JFrame implements KeyListener{
     private JLabel sortlabel;
 
     private boolean isLightModeOn = false;
+
     private boolean isFileBrowsed = false;
     private boolean hidden = true;
     private boolean firstBrowse = true;
@@ -58,13 +60,10 @@ public class ProjectForm extends JFrame implements KeyListener{
     private Iterator iter;
     private Iterator iterPrevious;
     private ProxyInterface colorSelectedProxy;
-    private PauseCommand pauseCommand = new PauseCommand();
-    private PlayCommand playCommand = new PlayCommand();
 
     private Playlist actualPlaylist;
-    private CheckForDuplicatesManager checkForDuplicatesManager;
 
-    public PlayerHoldingState getPlayerHoldingState() { return playerHoldingState; }
+    private CheckForDuplicatesManager checkForDuplicatesManager;
 
     private PlayerHoldingState playerHoldingState;
 
@@ -127,7 +126,9 @@ public class ProjectForm extends JFrame implements KeyListener{
 
         this.DrawPlaylist();
         addAllActionListeners();
-        jButtonBrowsePlaylists(checkForDuplicatesManager, actualPlaylist);
+//      first read a playlist
+        executeCommand( new BrowsePlaylistCommand() );
+
     }
 
     private void jButtonAddToPlaylistActionPerformed(CheckForDuplicatesManager checkForDuplicatesManager, Playlist actualPlaylist) {//GEN-FIRST:event_jButtonAddToPlaylistActionPerformed
@@ -171,7 +172,7 @@ public class ProjectForm extends JFrame implements KeyListener{
             }
         }
     }
-    private void DrawPlaylist() {
+    public void DrawPlaylist() {
         String[] myString = new String[1000];
         int i=0;
         if( mp3Player.getFilePlaylist() != null ) {
@@ -227,13 +228,7 @@ public class ProjectForm extends JFrame implements KeyListener{
         }
         hidden = !hidden;
     }
-
-    private void jButtonPauseActionPerformed(PlayerHoldingState playerHoldingState) {
-        executeCommand( new PauseCommand() );
-    }
-
-
-
+    
     private void jButtonPrintPlaylistActionPerformed(CheckForDuplicatesManager checkForDuplicatesManager, Playlist actualPlaylist) {
         readPlaylistFacade.read(mp3Player, checkForDuplicatesManager, actualPlaylist);
         if(mp3Player.getFilePlaylist() != null && !mp3Player.getFilePlaylist().isEmpty() ){
@@ -315,23 +310,6 @@ public class ProjectForm extends JFrame implements KeyListener{
     public void keyReleased(KeyEvent e) {
         System.out.println(e + "KEY RELEASED: ");
     }
-    public void jButtonBrowsePlaylists(CheckForDuplicatesManager checkForDuplicatesManager, Playlist actualPlaylist){
-        isFileBrowsed = false;
-        JFileChooser fileChooser = new JFileChooser();
-        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            mp3Player.setPlaylistPhysicalFile( new File( fileChooser.getSelectedFile().getAbsolutePath() ) );
-            this.jTextFieldPlayingFile.setText("Selected playlist: " + fileChooser.getSelectedFile().getName() );
-            readPlaylistFacade.read(mp3Player, checkForDuplicatesManager, actualPlaylist);
-            this.DrawPlaylist();
-            if( mp3Player.getFilePlaylist() != null && !mp3Player.getFilePlaylist().isEmpty() )
-                if( mp3Player.getFilePlaylist().get(0) != null )
-                    mp3Player.setFileCurrentlyPlaying( mp3Player.getFilePlaylist().get( 0 ) );
-            firstBrowse = false;
-        } else {
-            if (firstBrowse)
-                System.exit(69);
-        }
-    }
 
     public JButton getjButtonPause() {
         return jButtonPause;
@@ -345,10 +323,15 @@ public class ProjectForm extends JFrame implements KeyListener{
     public Iterator<Song> getIterPrevious() { return iterPrevious; }
 
     public Playlist getActualPlaylist() {return actualPlaylist; }
+    private void executeCommand( AlternateCommand command ){ command.execute( thisFrame, mp3Player ); }
+    public boolean isFileBrowsed() { return isFileBrowsed; }
+    public void setFileBrowsed(boolean fileBrowsed) { isFileBrowsed = fileBrowsed; }
+    public PlayerHoldingState getPlayerHoldingState() { return playerHoldingState; }
+    public boolean getIsFirstBrowse() { return firstBrowse;}
+    public void setFirstBrowse(boolean firstBrowse) { this.firstBrowse = firstBrowse; }
+    public ReadPlaylistFacade getReadPlaylistFacade() { return readPlaylistFacade; }
+    public CheckForDuplicatesManager getCheckForDuplicatesManager() { return checkForDuplicatesManager; }
 
-    private void executeCommand( AlternateCommand command ){
-        command.execute( thisFrame, mp3Player );
-    }
     public void addAllActionListeners(){
         jButtonPrintPlaylist.addActionListener(new ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -375,7 +358,7 @@ public class ProjectForm extends JFrame implements KeyListener{
         });
         jButtonPause.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonPauseActionPerformed(playerHoldingState);
+                executeCommand( new PauseCommand());
             }
         });
         jButtonPreviousSong.addActionListener(new java.awt.event.ActionListener() {
@@ -422,8 +405,7 @@ public class ProjectForm extends JFrame implements KeyListener{
         });
         jButtonBrowsePlaylist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonBrowsePlaylists(checkForDuplicatesManager, actualPlaylist);
-                jButtonBrowsePlaylist.setSelected(false);
+                executeCommand( new BrowsePlaylistCommand() );
             }
         });
         sortByName.addActionListener(new ActionListener() {
