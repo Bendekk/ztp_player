@@ -35,9 +35,10 @@ public class ProjectForm extends JFrame implements KeyListener{
     private JButton jButtonBrowsePlaylist;
     private JScrollPane scrollPane;
     private JButton sortByName;
-    private JButton sortByYear;
+    private JButton sortByArtist;
     private JButton sortByDuration;
     private JPanel backgroundPanel;
+    private JLabel sortlabel;
     boolean isLightModeOn = false;
     boolean isPlaylistBrowsed = false;
     boolean isFileBrowsed = false;
@@ -46,6 +47,7 @@ public class ProjectForm extends JFrame implements KeyListener{
     private ReadPlaylistFacade readPlaylistFacade;
     private Iterator iter;
     private Iterator iterPrevious;
+    private ProxyInterface colorSelectedProxy;
     PauseCommand pauseCommand = new PauseCommand();
     PlayCommand playCommand = new PlayCommand();
 
@@ -54,7 +56,7 @@ public class ProjectForm extends JFrame implements KeyListener{
     private SongSortStrategy songSortStrategy;
     MP3Player mp3Player;
     ProjectForm thisFrame;
-    
+
     public class MyKeyListener implements KeyEventDispatcher {
         MP3Player k;
         ProjectForm f;
@@ -82,9 +84,10 @@ public class ProjectForm extends JFrame implements KeyListener{
         mp3Player = k;
         thisFrame = this;
         readPlaylistFacade = new ReadPlaylistFacade();
-
+        colorSelectedProxy = new ColorSelectedProxy( new PrintingPlaylistOnJlist() );
         themedFrame = DarkThemeFrame.getDarkThemeFrame();
         themedFrame.changeTheme(thisFrame);
+        sortlabel.setVisible(false);
 
         StopPlayManager stopPlayManager = new StopPlayManager();
         Playlist actualPlaylist = new Playlist();
@@ -203,7 +206,7 @@ public class ProjectForm extends JFrame implements KeyListener{
             public void actionPerformed(ActionEvent e) {
                 songSortStrategy = new NameSort();
                 songSortStrategy.sort(actualPlaylist);
-                assignToJList(actualPlaylist);
+                colorSelectedProxy.color( actualPlaylist, jListPlaylist, "Sort by name", sortlabel);
             }
         });
         sortByDuration.addActionListener(new ActionListener() {
@@ -211,83 +214,20 @@ public class ProjectForm extends JFrame implements KeyListener{
             public void actionPerformed(ActionEvent e) {
                 songSortStrategy = new DurationSort();
                 songSortStrategy.sort(actualPlaylist);
-                assignToJList(actualPlaylist);
+                colorSelectedProxy.color( actualPlaylist, jListPlaylist, "Sort by duration", sortlabel );
             }
         });
-        sortByYear.addActionListener(new ActionListener() {
+        sortByArtist.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 songSortStrategy = new ArtistSort();
                 songSortStrategy.sort(actualPlaylist);
-                assignToJList(actualPlaylist);
+                colorSelectedProxy.color( actualPlaylist, jListPlaylist, "Sort by artist", sortlabel );
             }
         });
         jButtonBrowsePlaylists(stopPlayManager, actualPlaylist);
     }
-
-    private void assignToJList(Playlist playlist) {
-        ArrayList<String> allSongs = new ArrayList<>();
-        for (Song s : playlist.getCollectionOfSongs()) {
-            System.out.println(s.getName());
-            System.out.println("----------------");
-            allSongs.add(s.getName());
-        }
-
-        jListPlaylist.setListData(allSongs.toArray());
-        jListPlaylist.revalidate();
-        jListPlaylist.repaint();
-    }
-
-    private void ReadPlaylistFile(StopPlayManager stopPlayManager, Playlist actualPlaylist)
-    {
-        if(mp3Player.filePlaylist == null){
-            mp3Player.filePlaylist = new ArrayList<>();
-        }
-        if(mp3Player.filePlaylist != null) {
-            mp3Player.filePlaylist.clear();
-            stopPlayManager.unsubscribeAll();
-            try {
-                FileInputStream fi = new FileInputStream(mp3Player.playlistPhysicalFile);
-                ObjectInputStream oi = new ObjectInputStream(fi);
-                while (true)
-                {
-                    mp3Player.filePlaylist = (ArrayList) oi.readObject();
-                }
-            } catch (EOFException b) {
-                System.out.println("EOF exception");
-            } catch (IOException e) {
-                System.out.println("IO exception");
-            } catch (ClassNotFoundException e) {
-                System.out.println("CNF exception");
-            }
-            if (!mp3Player.filePlaylist.isEmpty()) {
-                actualPlaylist.clear();
-                for (File s : mp3Player.filePlaylist) {
-                    Mp3File mp3file = null;
-                    int duration = 0;
-                    String artist = "Unknown";
-                    try {
-                        mp3file = new Mp3File(s.getAbsolutePath());
-                        System.out.println("duration:" + mp3file.getLengthInSeconds());
-                        if (mp3file != null &&  mp3file.hasId3v2Tag()) {
-                            duration = (int) mp3file.getLengthInSeconds();
-                            if (mp3file.getId3v2Tag().getArtist() != null)
-                                artist = mp3file.getId3v2Tag().getArtist();
-                        }
-                    } catch (InvalidDataException e) {
-                        e.printStackTrace();
-                    } catch (UnsupportedTagException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } ;
-                    Song newSong = new Song(s.getName(), duration, artist, s);
-                    stopPlayManager.subscribe(newSong);
-                    actualPlaylist.addToPlaylist(newSong);
-                }
-            }
-        }
-    }
+    
     private void jButtonAddToPlaylistActionPerformed(StopPlayManager stopPlayManager, Playlist actualPlaylist) {//GEN-FIRST:event_jButtonAddToPlaylistActionPerformed
         boolean GoFurther = true;
 
@@ -372,6 +312,7 @@ public class ProjectForm extends JFrame implements KeyListener{
         if( hidden ) {
             this.setSize(695, displayHeight);
             scrollPane.setVisible(true);
+            sortlabel.setVisible(true);
             this.revalidate();
             this.repaint();
             this.jButtonDisplayPlaylist.setText("Hide Playlist");
@@ -379,6 +320,7 @@ public class ProjectForm extends JFrame implements KeyListener{
         else{
             this.setSize(578, displayHeight);
             scrollPane.setVisible(false);
+            sortlabel.setVisible(false);
             this.revalidate();
             this.repaint();
             this.jButtonDisplayPlaylist.setText("Display Playlist");
@@ -499,7 +441,7 @@ public class ProjectForm extends JFrame implements KeyListener{
         components.push(jButtonBrowsePlaylist);
         components.push(scrollPane);
         components.push(sortByName);
-        components.push(sortByYear);
+        components.push(sortByArtist);
         components.push(sortByDuration);
         return components;
     }

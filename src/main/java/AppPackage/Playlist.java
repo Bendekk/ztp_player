@@ -5,7 +5,11 @@ import java.util.Iterator;
 
 public class Playlist implements Iterable<Song> {
     private ArrayList<Song> collectionOfSongs = new ArrayList<>();
-    int actualPosition = 0;
+    private int actualPosition = 0;
+
+    public int getActualPosition() {
+        return actualPosition;
+    }
 
     public Iterator<Song> iterator(){
         return new Iterator<>() {
