@@ -3,7 +3,7 @@ package AppPackage.state;
 import AppPackage.MP3Player;
 import AppPackage.ProjectForm;
 
-public class PlayerPauseState extends PlayerPausePlayState{
+public class PlayerPauseState implements PlayerPausePlayState{
     public void doAction(PlayerHoldingState playerHoldingState, ProjectForm frame, MP3Player k){
         frame.getjButtonPause().setText("Resume");
         k.getA().suspend();
