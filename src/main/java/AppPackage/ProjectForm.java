@@ -1,9 +1,6 @@
 package AppPackage;
 
-import AppPackage.commands.AlternateCommand;
-import AppPackage.commands.PauseCommand;
-import AppPackage.commands.PlayCommand;
-import AppPackage.commands.PreviousSongCommand;
+import AppPackage.commands.*;
 import AppPackage.facade.ReadPlaylistFacade;
 import AppPackage.factoryMethodSingleton.DarkThemeFrame;
 import AppPackage.factoryMethodSingleton.LightThemeFrame;
@@ -236,17 +233,7 @@ public class ProjectForm extends JFrame implements KeyListener{
     }
 
 
-    private void jButtonNextSongActionPerformed(CheckForDuplicatesManager checkForDuplicatesManager, Playlist actualPlaylist, PlayerHoldingState playerHoldingState) {//GEN-FIRST:event_jButtonNextSongActionPerformed
-        if( mp3Player.getFileCurrentlyPlaying() != null && !actualPlaylist.getCollectionOfSongs().isEmpty() )
-        {
-            if ( iter.hasNext() ){
-                Song song = (Song) iter.next();
-                mp3Player.setFileCurrentlyPlaying( song.getFile() );
-            }
-        }
-        if( mp3Player.getA() != null && mp3Player.getFileCurrentlyPlaying() != null )
-            executeCommand( new PlayCommand() );
-    }
+
     private void jButtonPrintPlaylistActionPerformed(CheckForDuplicatesManager checkForDuplicatesManager, Playlist actualPlaylist) {
         readPlaylistFacade.read(mp3Player, checkForDuplicatesManager, actualPlaylist);
         if(mp3Player.getFilePlaylist() != null && !mp3Player.getFilePlaylist().isEmpty() ){
@@ -398,8 +385,7 @@ public class ProjectForm extends JFrame implements KeyListener{
         });
         jButtonNextSong.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonNextSongActionPerformed(checkForDuplicatesManager, actualPlaylist, playerHoldingState);
-                jButtonNextSong.setSelected(false);
+                executeCommand( new NextSongCommand() );
             }
         });
         jButtonDisplayPlaylist.addActionListener(new java.awt.event.ActionListener() {
