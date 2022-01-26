@@ -133,30 +133,6 @@ public class ProjectForm extends JFrame implements KeyListener{
 
     }
 
-    private void jButtonAddToPlaylistActionPerformed(CheckForDuplicatesManager checkForDuplicatesManager, Playlist actualPlaylist) {//GEN-FIRST:event_jButtonAddToPlaylistActionPerformed
-        boolean GoFurther = true;
-
-        if( isFileBrowsed) {
-            if (mp3Player.getFileCurrentlyPlaying() != null) {
-                if (mp3Player.getFilePlaylist() == null) {
-                    mp3Player.setFilePlaylist( new ArrayList() );
-                }
-                if (!mp3Player.getFilePlaylist().isEmpty()) {
-                    GoFurther = checkForDuplicatesManager.notifySubscribers(mp3Player.getFileCurrentlyPlaying().getName());
-                }
-                if (GoFurther) {
-                    mp3Player.getFilePlaylist().add( mp3Player.getFileCurrentlyPlaying() );
-                    this.WritePlaylistFile();
-                    this.DrawPlaylist();
-                }
-            } else {
-                System.out.printf("Please, select a file first!\n");
-            }
-        }
-        else
-            System.out.printf("Can't add playlist to playlist, you dumb dumb!\n");
-        readPlaylistFacade.read(mp3Player, checkForDuplicatesManager, actualPlaylist);
-    }
     public void WritePlaylistFile() {
         if(mp3Player.getFilePlaylist() != null) {
             try{
@@ -282,7 +258,7 @@ public class ProjectForm extends JFrame implements KeyListener{
 
     public Playlist getActualPlaylist() {return actualPlaylist; }
     private void executeCommand( AlternateCommand command ){ command.execute( thisFrame, mp3Player ); }
-    public boolean isFileBrowsed() { return isFileBrowsed; }
+    public boolean getIsFileBrowsed() { return isFileBrowsed; }
     public void setFileBrowsed(boolean fileBrowsed) { isFileBrowsed = fileBrowsed; }
     public PlayerHoldingState getPlayerHoldingState() { return playerHoldingState; }
     public boolean getIsFirstBrowse() { return firstBrowse;}
@@ -335,13 +311,13 @@ public class ProjectForm extends JFrame implements KeyListener{
         });
         jButtonDisplayPlaylist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                executeCommand( new DisplayCommand() );
+                executeCommand( new DisplayPlaylistCommand() );
             }
         });
 
         jButtonAddToPlaylist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonAddToPlaylistActionPerformed(checkForDuplicatesManager, actualPlaylist);
+                executeCommand( new AddToPlaylistCommand() );
             }
         });
 

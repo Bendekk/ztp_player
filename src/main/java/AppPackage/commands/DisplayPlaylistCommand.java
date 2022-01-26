@@ -3,7 +3,7 @@ package AppPackage.commands;
 import AppPackage.MP3Player;
 import AppPackage.ProjectForm;
 
-public class DisplayCommand implements AlternateCommand {
+public class DisplayPlaylistCommand implements AlternateCommand {
     public void execute(ProjectForm frame, MP3Player mp3Player) {
         if( frame.getIsHidden() ) {
             frame.setSize(695, frame.getDisplayHeight() );
