@@ -155,7 +155,7 @@ public class ProjectForm extends JFrame implements KeyListener{
             System.out.printf("Can't add playlist to playlist, you dumb dumb!\n");
         readPlaylistFacade.read(mp3Player, checkForDuplicatesManager, actualPlaylist);
     }
-    private void WritePlaylistFile() {
+    public void WritePlaylistFile() {
         if(mp3Player.getFilePlaylist() != null) {
             try{
                 FileOutputStream fs = new FileOutputStream( mp3Player.getPlaylistPhysicalFile() );
@@ -200,15 +200,6 @@ public class ProjectForm extends JFrame implements KeyListener{
         }
     }
 
-    private void jButtonClearPlaylistActionPerformed(CheckForDuplicatesManager checkForDuplicatesManager, Playlist actualPlaylist) {
-        if(mp3Player.getFilePlaylist() != null)
-        {
-            mp3Player.getFilePlaylist().clear();
-            actualPlaylist.clear();
-            this.WritePlaylistFile();
-            this.DrawPlaylist();
-        }
-    }
     private void jButtonDisplayPlaylistActionPerformed() {
         if( hidden ) {
             this.setSize(695, displayHeight);
@@ -329,7 +320,7 @@ public class ProjectForm extends JFrame implements KeyListener{
         });
         jButtonClearPlaylist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonClearPlaylistActionPerformed(checkForDuplicatesManager, actualPlaylist);
+                executeCommand( new ClearPlaylistCommand() );
             }
         });
         jButtonPlay.addActionListener(new java.awt.event.ActionListener() {
