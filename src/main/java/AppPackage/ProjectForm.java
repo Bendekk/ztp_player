@@ -101,15 +101,16 @@ public class ProjectForm extends JFrame implements KeyListener{
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+        this.setResizable(false);
         this.revalidate();
         this.repaint();
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        mp3Player.playlistPhysicalFile = new File("playlist.txt");
+        mp3Player.setPlaylistPhysicalFile( new File( "playlist.txt" ) );
         readPlaylistFacade.read(mp3Player, stopPlayManager, actualPlaylist);
-        if(mp3Player.filePlaylist!=null && !mp3Player.filePlaylist.isEmpty())
-            if(mp3Player.filePlaylist.get(0)!=null)
-                mp3Player.fileCurrentlyPlaying=mp3Player.filePlaylist.get(0);
+        if( mp3Player.getFilePlaylist() != null && !mp3Player.getFilePlaylist().isEmpty() )
+            if( mp3Player.getFilePlaylist().get(0) != null)
+                mp3Player.setFileCurrentlyPlaying( mp3Player.getFilePlaylist().get(0) );
 
         this.DrawPlaylist();
 
@@ -229,15 +230,15 @@ public class ProjectForm extends JFrame implements KeyListener{
         boolean GoFurther = true;
 
         if( isFileBrowsed) {
-            if (mp3Player.fileCurrentlyPlaying != null) {
-                if (mp3Player.filePlaylist == null) {
-                    mp3Player.filePlaylist = new ArrayList();
+            if (mp3Player.getFileCurrentlyPlaying() != null) {
+                if (mp3Player.getFilePlaylist() == null) {
+                    mp3Player.setFilePlaylist( new ArrayList() );
                 }
-                if (!mp3Player.filePlaylist.isEmpty()) {
-                    GoFurther = stopPlayManager.notifySubscribers(mp3Player.fileCurrentlyPlaying.getName());
+                if (!mp3Player.getFilePlaylist().isEmpty()) {
+                    GoFurther = stopPlayManager.notifySubscribers(mp3Player.getFileCurrentlyPlaying().getName());
                 }
                 if (GoFurther) {
-                    mp3Player.filePlaylist.add(mp3Player.fileCurrentlyPlaying);
+                    mp3Player.getFilePlaylist().add( mp3Player.getFileCurrentlyPlaying() );
                     this.WritePlaylistFile();
                     this.DrawPlaylist();
                 }
@@ -250,11 +251,11 @@ public class ProjectForm extends JFrame implements KeyListener{
         readPlaylistFacade.read(mp3Player, stopPlayManager, actualPlaylist);
     }
     private void WritePlaylistFile() {
-        if(mp3Player.filePlaylist!=null) {
+        if(mp3Player.getFilePlaylist() != null) {
             try{
-                FileOutputStream fs = new FileOutputStream(mp3Player.playlistPhysicalFile);
-                ObjectOutputStream os = new ObjectOutputStream(fs);
-                os.writeObject(mp3Player.filePlaylist);
+                FileOutputStream fs = new FileOutputStream( mp3Player.getPlaylistPhysicalFile() );
+                ObjectOutputStream os = new ObjectOutputStream( fs );
+                os.writeObject( mp3Player.getFilePlaylist() );
                 os.close();
                 fs.close();
             }
@@ -269,8 +270,8 @@ public class ProjectForm extends JFrame implements KeyListener{
     private void DrawPlaylist() {
         String[] myString = new String[1000];
         int i=0;
-        if( mp3Player.filePlaylist!=null) {
-            for(File s : mp3Player.filePlaylist){
+        if( mp3Player.getFilePlaylist() != null ) {
+            for(File s : mp3Player.getFilePlaylist() ){
                 if( s != null ) {
                     myString[i] = s.getName();
                     ++i;
@@ -290,16 +291,16 @@ public class ProjectForm extends JFrame implements KeyListener{
         fileChooser.setFileFilter(new FileNameExtensionFilter("MP3 Files", "mp3"));
 
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            mp3Player.fileCurrentlyPlaying = fileChooser.getSelectedFile();
-            this.jTextFieldPlayingFile.setText("Selected: " + mp3Player.fileCurrentlyPlaying.getName());
-            mp3Player.Browsed = true;
+            mp3Player.setFileCurrentlyPlaying( fileChooser.getSelectedFile() );
+            this.jTextFieldPlayingFile.setText("Selected: " + mp3Player.getFileCurrentlyPlaying().getName());
+//            mp3Player.Browsed = true;
         }
     }
 
     private void jButtonClearPlaylistActionPerformed(StopPlayManager stopPlayManager, Playlist actualPlaylist) {
-        if(mp3Player.filePlaylist!=null)
+        if(mp3Player.getFilePlaylist() != null)
         {
-            mp3Player.filePlaylist.clear();
+            mp3Player.getFilePlaylist().clear();
             actualPlaylist.clear();
             this.WritePlaylistFile();
             this.DrawPlaylist();
@@ -331,42 +332,40 @@ public class ProjectForm extends JFrame implements KeyListener{
     private void jButtonPauseActionPerformed(PlayerHoldingState playerHoldingState) {pauseCommand.execute(this, mp3Player, playerHoldingState);}
 
     private void jButtonPreviousSongActionPerformed(StopPlayManager stopPlayManager, Playlist actualPlaylist, PlayerHoldingState playerHoldingState) {
-        if(mp3Player.fileCurrentlyPlaying!=null && !actualPlaylist.getCollectionOfSongs().isEmpty())
+        if(mp3Player.getFileCurrentlyPlaying() != null && !actualPlaylist.getCollectionOfSongs().isEmpty())
         {
 
             if( iterPrevious.hasNext() ){
                 Song song = (Song) iterPrevious.next();
-                mp3Player.fileCurrentlyPlaying = song.getFile();
+                mp3Player.setFileCurrentlyPlaying( song.getFile() );
             }
         }
-        if(mp3Player.a!=null && mp3Player.fileCurrentlyPlaying!=null)
+        if( mp3Player.getA() != null && mp3Player.getFileCurrentlyPlaying() != null )
         {
             this.PlaySongFile(playerHoldingState);
         }
     }
     private void jButtonNextSongActionPerformed(StopPlayManager stopPlayManager, Playlist actualPlaylist, PlayerHoldingState playerHoldingState) {//GEN-FIRST:event_jButtonNextSongActionPerformed
-        if( mp3Player.fileCurrentlyPlaying != null && !actualPlaylist.getCollectionOfSongs().isEmpty() )
+        if( mp3Player.getFileCurrentlyPlaying() != null && !actualPlaylist.getCollectionOfSongs().isEmpty() )
         {
             if ( iter.hasNext() ){
                 Song song = (Song) iter.next();
-                mp3Player.fileCurrentlyPlaying = song.getFile();
+                mp3Player.setFileCurrentlyPlaying( song.getFile() );
             }
         }
-        if(mp3Player.a!=null && mp3Player.fileCurrentlyPlaying!=null)
-        {
+        if( mp3Player.getA() != null && mp3Player.getFileCurrentlyPlaying() != null )
             this.PlaySongFile(playerHoldingState);
-        }
     }
     private void jButtonPrintPlaylistActionPerformed(StopPlayManager stopPlayManager, Playlist actualPlaylist) {
         readPlaylistFacade.read(mp3Player, stopPlayManager, actualPlaylist);
-        if(mp3Player.filePlaylist!=null && !mp3Player.filePlaylist.isEmpty()){
+        if(mp3Player.getFilePlaylist() != null && !mp3Player.getFilePlaylist().isEmpty() ){
             System.out.printf("Playlist Content: \n\n");
-            for(File s: mp3Player.filePlaylist){
+            for( File s: mp3Player.getFilePlaylist() ){
                 if(s!=null){
                     System.out.printf("%s\n", s.getName());
                 }
             }
-            System.out.printf("\nThere are %d songs in the playlist.\n", mp3Player.filePlaylist.size());
+            System.out.printf("\nThere are %d songs in the playlist.\n", mp3Player.getFilePlaylist().size());
         }
         else{
             System.out.printf("Playlist is empty!\n");
@@ -375,21 +374,19 @@ public class ProjectForm extends JFrame implements KeyListener{
     private void jButtonRepeatModeActionPerformed() {
         if( this.jButtonRepeatMode.getText().compareTo( "Repeat Mode is ON!" ) == 0 ){
             this.jButtonRepeatMode.setText( "Repeat Mode is OFF!" );
-            mp3Player.RepeatMode = false;
+//            mp3Player.RepeatMode = false;
         }
         else{
             this.jButtonRepeatMode.setText( "Repeat Mode is ON!" );
-            mp3Player.RepeatMode = true;
+//            mp3Player.RepeatMode = true;
         }
     }
     private void jButtonShuffleActionPerformed(StopPlayManager stopPlayManager, PlayerHoldingState playerHoldingState) {
-        if(mp3Player.filePlaylist!=null)
-        {
+        if(mp3Player.getFilePlaylist() != null){
             Random rnd = new Random();
-            if(mp3Player.filePlaylist.size()>2)
-            {
-                int choice = rnd.nextInt(mp3Player.filePlaylist.size());
-                mp3Player.fileCurrentlyPlaying = mp3Player.filePlaylist.get(choice);
+            if( mp3Player.getFilePlaylist().size() > 2 ) {
+                int choice = rnd.nextInt(mp3Player.getFilePlaylist().size());
+                mp3Player.setFileCurrentlyPlaying( mp3Player.getFilePlaylist().get( choice ) );
                 this.PlaySongFile(playerHoldingState);
             }
             else
@@ -399,12 +396,11 @@ public class ProjectForm extends JFrame implements KeyListener{
         }
     }
     private void jButtonStopActionPerformed(StopPlayManager stopPlayManager, PlayerHoldingState playerHoldingState) {
-        if(mp3Player.a!=null)
-        {
+        if( mp3Player.getA() != null ){
             playerHoldingState.setState(new PlayerPlayState() );
             playerHoldingState.getState().doAction( playerHoldingState, this, mp3Player);
-            mp3Player.a.suspend();
-            jTextFieldPlayingFile.setText("Stopped on: " + mp3Player.fileCurrentlyPlaying.getName());
+            mp3Player.getA().suspend();
+            jTextFieldPlayingFile.setText("Stopped on: " + mp3Player.getFileCurrentlyPlaying().getName());
         }
     }
     private void jButtonSetColorMode() {
@@ -457,13 +453,13 @@ public class ProjectForm extends JFrame implements KeyListener{
         isPlaylistBrowsed = true;
         JFileChooser fileChooser = new JFileChooser();
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            mp3Player.playlistPhysicalFile = new File( fileChooser.getSelectedFile().getAbsolutePath() );
+            mp3Player.setPlaylistPhysicalFile( new File( fileChooser.getSelectedFile().getAbsolutePath() ) );
             this.jTextFieldPlayingFile.setText("Selected playlist: " + fileChooser.getSelectedFile().getName() );
             readPlaylistFacade.read(mp3Player, stopPlayManager, actualPlaylist);
             this.DrawPlaylist();
-            if(mp3Player.filePlaylist!=null && !mp3Player.filePlaylist.isEmpty())
-                if(mp3Player.filePlaylist.get(0)!=null)
-                    mp3Player.fileCurrentlyPlaying=mp3Player.filePlaylist.get(0);
+            if( mp3Player.getFilePlaylist() != null && !mp3Player.getFilePlaylist().isEmpty() )
+                if( mp3Player.getFilePlaylist().get(0) != null )
+                    mp3Player.setFileCurrentlyPlaying( mp3Player.getFilePlaylist().get( 0 ) );
             firstBrowse = false;
         } else {
             if (firstBrowse)

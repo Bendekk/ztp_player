@@ -6,22 +6,21 @@ import java.io.FileInputStream;
 public class PlayCommand extends AlternateCommand {
     @Override
     public void execute(ProjectForm frame, MP3Player k, PlayerHoldingState playerHoldingState) {
-        if(k.a!=null) {
-            if(k.a.isAlive()) {
-                k.a.stop();
+        if( k.getA() != null ) {
+            if( k.getA().isAlive() ) {
+                k.getA().stop();
             }
         }
-        k.a = new Thread () {
+        k.setA( new Thread () {
             public void run() {
                 try {
-                    if(k.fileCurrentlyPlaying!=null) {
-                        FileInputStream buff = new FileInputStream(k.fileCurrentlyPlaying);
-                        k.myplayer = new Player(buff);
-                        if(k.myplayer != null) {
-                            frame.getjTextFieldPlayingFile().setText("Playing: " + k.fileCurrentlyPlaying.getName());
-                            k.myplayer.play();
-                            System.out.println("hih");
-                            k.Browsed = false;
+                    if( k.getFileCurrentlyPlaying() != null ) {
+                        FileInputStream buff = new FileInputStream( k.getFileCurrentlyPlaying() );
+                        k.setMyplayer( new Player( buff ) );
+                        if( k.getMyplayer() != null ) {
+                            frame.getjTextFieldPlayingFile().setText("Playing: " + k.getFileCurrentlyPlaying().getName());
+                            k.getMyplayer().play();
+//                            k.Browsed = false;
                         }
                     }
                 }
@@ -29,7 +28,7 @@ public class PlayCommand extends AlternateCommand {
                     System.out.printf("Error Playing File: %s\n", e);
                 }
             }
-        };
-        k.a.start();
+        });
+        k.getA().start();
     }
 }

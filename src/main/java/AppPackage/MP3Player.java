@@ -7,13 +7,14 @@ import java.util.*;
 import javazoom.jl.player.Player;
 
 public class MP3Player extends javax.swing.JFrame {
-    public Player myplayer;
-    public File fileCurrentlyPlaying;
-    public ArrayList<File> filePlaylist = new ArrayList();
-    public File playlistPhysicalFile;
-    public static Thread a;
-    public static boolean RepeatMode;
-    public boolean Browsed;
+
+    private Player myplayer;
+    private File fileCurrentlyPlaying;
+    private ArrayList<File> filePlaylist = new ArrayList();
+    private File playlistPhysicalFile;
+    private static Thread a;
+//    public static boolean RepeatMode;
+    private boolean Browsed;
     private Thread b;
 
     public MP3Player() throws InvalidDataException, UnsupportedTagException, IOException {
@@ -53,6 +54,26 @@ public class MP3Player extends javax.swing.JFrame {
             }
         });
     }
+    public static void setA(Thread a) {
+        MP3Player.a = a;
+    }
+    public static Thread getA() {
+        return a;
+    }
 
+    public File getPlaylistPhysicalFile() {
+        return playlistPhysicalFile;
+    }
+    public void setPlaylistPhysicalFile(File playlistPhysicalFile) {
+        this.playlistPhysicalFile = playlistPhysicalFile;
+    }
 
+    public Player getMyplayer() { return myplayer; }
+    public void setMyplayer(Player myplayer) {this.myplayer = myplayer;}
+
+    public File getFileCurrentlyPlaying() {return fileCurrentlyPlaying;}
+    public void setFileCurrentlyPlaying(File fileCurrentlyPlaying) {this.fileCurrentlyPlaying = fileCurrentlyPlaying;}
+
+    public ArrayList<File> getFilePlaylist() {return filePlaylist;}
+    public void setFilePlaylist(ArrayList<File> filePlaylist) {this.filePlaylist = filePlaylist;}
 }

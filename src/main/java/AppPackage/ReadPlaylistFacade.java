@@ -10,18 +10,18 @@ import java.util.ArrayList;
 public class ReadPlaylistFacade {
     public void read(MP3Player mp3Player, StopPlayManager stopPlayManager, Playlist actualPlaylist)
     {
-        if(mp3Player.filePlaylist == null){
-            mp3Player.filePlaylist = new ArrayList<>();
+        if(mp3Player.getFilePlaylist() == null){
+            mp3Player.setFilePlaylist( new ArrayList<>() );
         }
-        if(mp3Player.filePlaylist != null) {
-            mp3Player.filePlaylist.clear();
+        if(mp3Player.getFilePlaylist() != null) {
+            mp3Player.getFilePlaylist().clear();
             stopPlayManager.unsubscribeAll();
             try {
-                FileInputStream fi = new FileInputStream(mp3Player.playlistPhysicalFile);
+                FileInputStream fi = new FileInputStream( mp3Player.getPlaylistPhysicalFile() );
                 ObjectInputStream oi = new ObjectInputStream(fi);
                 while (true)
                 {
-                    mp3Player.filePlaylist = (ArrayList) oi.readObject();
+                    mp3Player.setFilePlaylist( (ArrayList) oi.readObject() );
                 }
             } catch (EOFException b) {
                 System.out.println("EOF exception");
@@ -30,9 +30,9 @@ public class ReadPlaylistFacade {
             } catch (ClassNotFoundException e) {
                 System.out.println("CNF exception");
             }
-            if (!mp3Player.filePlaylist.isEmpty()) {
+            if (!mp3Player.getFilePlaylist().isEmpty()) {
                 actualPlaylist.clear();
-                for (File s : mp3Player.filePlaylist) {
+                for ( File s : mp3Player.getFilePlaylist() ) {
                     Mp3File mp3file = null;
                     int duration = 0;
                     String artist = "Unknown";
