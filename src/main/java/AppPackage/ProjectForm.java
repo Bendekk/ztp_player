@@ -167,14 +167,6 @@ public class ProjectForm extends JFrame implements KeyListener{
         });
     }
 
-    private void jButtonStopActionPerformed(CheckForDuplicatesManager checkForDuplicatesManager, PlayerHoldingState playerHoldingState) {
-        if( mp3Player.getA() != null ){
-            playerHoldingState.setState(new PlayerPlayState() );
-            playerHoldingState.getState().doAction( playerHoldingState, this, mp3Player);
-            mp3Player.getA().suspend();
-            jTextFieldPlayingFile.setText("Stopped on: " + mp3Player.getFileCurrentlyPlaying().getName());
-        }
-    }
     private void jButtonSetColorMode() {
         if(isLightModeOn)
             themedFrame = DarkThemeFrame.getDarkThemeFrame();
@@ -303,7 +295,7 @@ public class ProjectForm extends JFrame implements KeyListener{
         });
         jButtonStop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonStopActionPerformed(checkForDuplicatesManager, playerHoldingState);
+                executeCommand( new StopCommand() );
             }
         });
         jButtonColorMode.addActionListener(new java.awt.event.ActionListener() {
