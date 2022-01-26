@@ -1,12 +1,11 @@
 package AppPackage.commands;
 
 import AppPackage.MP3Player;
-import AppPackage.state.PlayerHoldingState;
 import AppPackage.ProjectForm;
 import javazoom.jl.player.Player;
 import java.io.FileInputStream;
 
-public class PlayCommand extends AlternateCommand {
+public class PlayCommand implements AlternateCommand {
     @Override
     public void execute(ProjectForm frame, MP3Player k) {
         if( k.getA() != null ) {

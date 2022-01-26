@@ -78,13 +78,6 @@ public class ProjectForm extends JFrame implements KeyListener{
     private ProjectForm thisFrame;
 
     public class MyKeyListener implements KeyEventDispatcher {
-        MP3Player k;
-        ProjectForm f;
-        PlayerHoldingState playerHoldingState;
-        public MyKeyListener(ProjectForm f, MP3Player k, PlayerHoldingState playerHoldingState){
-            this.f = f;
-            this.playerHoldingState = playerHoldingState;
-        }
         @Override
         public boolean dispatchKeyEvent(KeyEvent e) {
             if (e.getID() == KeyEvent.KEY_PRESSED) {
@@ -116,7 +109,7 @@ public class ProjectForm extends JFrame implements KeyListener{
         playerHoldingState = new PlayerHoldingState( new PlayerPauseState() );
 
         this.setContentPane(panel1);
-        KeyEventDispatcher listener = new MyKeyListener(this, k, playerHoldingState);
+        KeyEventDispatcher listener = new MyKeyListener();
         KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         manager.addKeyEventDispatcher(listener);
         setFocusable(false);

@@ -2,14 +2,10 @@ package AppPackage.commands;
 
 import AppPackage.MP3Player;
 import AppPackage.Song;
-import AppPackage.iterator.Playlist;
-import AppPackage.observer.CheckForDuplicatesManager;
-import AppPackage.state.PlayerHoldingState;
 import AppPackage.ProjectForm;
 
-import java.util.Iterator;
 
-public class PreviousSongCommand extends AlternateCommand {
+public class PreviousSongCommand implements AlternateCommand {
     @Override
     public void execute(ProjectForm frame, MP3Player mp3Player) {
             if( mp3Player.getFileCurrentlyPlaying() != null && !frame.getActualPlaylist().getCollectionOfSongs().isEmpty() ) {
