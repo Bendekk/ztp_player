@@ -1,7 +1,9 @@
 package AppPackage;
 
+import AppPackage.commands.AlternateCommand;
 import AppPackage.commands.PauseCommand;
 import AppPackage.commands.PlayCommand;
+import AppPackage.commands.PreviousSongCommand;
 import AppPackage.facade.ReadPlaylistFacade;
 import AppPackage.factoryMethodSingleton.DarkThemeFrame;
 import AppPackage.factoryMethodSingleton.LightThemeFrame;
@@ -49,18 +51,24 @@ public class ProjectForm extends JFrame implements KeyListener{
     private JButton sortByDuration;
     private JPanel backgroundPanel;
     private JLabel sortlabel;
+
     private boolean isLightModeOn = false;
     private boolean isFileBrowsed = false;
     private boolean hidden = true;
     private boolean firstBrowse = true;
+
     private ReadPlaylistFacade readPlaylistFacade;
     private Iterator iter;
     private Iterator iterPrevious;
     private ProxyInterface colorSelectedProxy;
     private PauseCommand pauseCommand = new PauseCommand();
     private PlayCommand playCommand = new PlayCommand();
+
     private Playlist actualPlaylist;
     private CheckForDuplicatesManager checkForDuplicatesManager;
+
+    public PlayerHoldingState getPlayerHoldingState() { return playerHoldingState; }
+
     private PlayerHoldingState playerHoldingState;
 
     private ThemedFrame themedFrame;
@@ -82,10 +90,10 @@ public class ProjectForm extends JFrame implements KeyListener{
             if (e.getID() == KeyEvent.KEY_PRESSED) {
                 switch( e.getKeyChar() ){
                     case 'x':
-                        pauseCommand.execute(f, mp3Player, playerHoldingState);
+                        executeCommand( new PauseCommand() );
                         break;
                     case 'c':
-                        playCommand.execute(f, mp3Player, playerHoldingState);
+                        executeCommand( new PlayCommand() );
                         break;
                 }
             }
@@ -230,20 +238,11 @@ public class ProjectForm extends JFrame implements KeyListener{
         hidden = !hidden;
     }
 
-    private void jButtonPauseActionPerformed(PlayerHoldingState playerHoldingState) {pauseCommand.execute(this, mp3Player, playerHoldingState);}
-
-    private void jButtonPreviousSongActionPerformed(CheckForDuplicatesManager checkForDuplicatesManager, Playlist actualPlaylist, PlayerHoldingState playerHoldingState) {
-        if(mp3Player.getFileCurrentlyPlaying() != null && !actualPlaylist.getCollectionOfSongs().isEmpty())
-        {
-            if( iterPrevious.hasNext() ){
-                Song song = (Song) iterPrevious.next();
-                mp3Player.setFileCurrentlyPlaying( song.getFile() );
-            }
-        }
-        if( mp3Player.getA() != null && mp3Player.getFileCurrentlyPlaying() != null ) {
-            playCommand.execute(this, mp3Player, playerHoldingState);
-        }
+    private void jButtonPauseActionPerformed(PlayerHoldingState playerHoldingState) {
+        executeCommand( new PauseCommand() );
     }
+
+
     private void jButtonNextSongActionPerformed(CheckForDuplicatesManager checkForDuplicatesManager, Playlist actualPlaylist, PlayerHoldingState playerHoldingState) {//GEN-FIRST:event_jButtonNextSongActionPerformed
         if( mp3Player.getFileCurrentlyPlaying() != null && !actualPlaylist.getCollectionOfSongs().isEmpty() )
         {
@@ -253,7 +252,7 @@ public class ProjectForm extends JFrame implements KeyListener{
             }
         }
         if( mp3Player.getA() != null && mp3Player.getFileCurrentlyPlaying() != null )
-            playCommand.execute(this, mp3Player, playerHoldingState);
+            executeCommand( new PlayCommand() );
     }
     private void jButtonPrintPlaylistActionPerformed(CheckForDuplicatesManager checkForDuplicatesManager, Playlist actualPlaylist) {
         readPlaylistFacade.read(mp3Player, checkForDuplicatesManager, actualPlaylist);
@@ -277,7 +276,7 @@ public class ProjectForm extends JFrame implements KeyListener{
             if( mp3Player.getFilePlaylist().size() > 1 ) {
                 int choice = rnd.nextInt(mp3Player.getFilePlaylist().size());
                 mp3Player.setFileCurrentlyPlaying( mp3Player.getFilePlaylist().get( choice ) );
-                playCommand.execute(this, mp3Player, playerHoldingState);
+                executeCommand( new PlayCommand() );
             }
             else{
                 System.out.printf("You cannot shuffle a playlist with less than 2 songs.\n");
@@ -362,6 +361,14 @@ public class ProjectForm extends JFrame implements KeyListener{
         return jTextFieldPlayingFile;
     }
 
+    public Iterator<Song> getIter() { return iter; }
+    public Iterator<Song> getIterPrevious() { return iterPrevious; }
+
+    public Playlist getActualPlaylist() {return actualPlaylist; }
+
+    private void executeCommand( AlternateCommand command ){
+        command.execute( thisFrame, mp3Player );
+    }
     public void addAllActionListeners(){
         jButtonPrintPlaylist.addActionListener(new ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -383,20 +390,17 @@ public class ProjectForm extends JFrame implements KeyListener{
         });
         jButtonPlay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                jButtonPlayActionPerformed(evt, k, stopPlayManager, playerHoldingState);
-                playCommand.execute(thisFrame, mp3Player, playerHoldingState);
-                jButtonPlay.setSelected(false);
+                executeCommand( new PlayCommand() );
             }
         });
         jButtonPause.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonPauseActionPerformed(playerHoldingState);
-                jButtonPause.setSelected(false);
             }
         });
         jButtonPreviousSong.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonPreviousSongActionPerformed(checkForDuplicatesManager, actualPlaylist, playerHoldingState);
+                executeCommand( new PreviousSongCommand() );
             }
         });
         jButtonNextSong.addActionListener(new java.awt.event.ActionListener() {

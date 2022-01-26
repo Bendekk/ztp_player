@@ -8,7 +8,7 @@ import java.io.FileInputStream;
 
 public class PlayCommand extends AlternateCommand {
     @Override
-    public void execute(ProjectForm frame, MP3Player k, PlayerHoldingState playerHoldingState) {
+    public void execute(ProjectForm frame, MP3Player k) {
         if( k.getA() != null ) {
             if( k.getA().isAlive() ) {
                 k.getA().stop();

@@ -1,11 +1,14 @@
 package AppPackage.commands;
 
 import AppPackage.MP3Player;
+import AppPackage.Song;
+import AppPackage.iterator.Playlist;
 import AppPackage.state.PlayerHoldingState;
 import AppPackage.ProjectForm;
 
-public abstract class AlternateCommand {
-    AlternateCommand() {}
+import java.util.Iterator;
 
-    public abstract void execute(ProjectForm frame, MP3Player k, PlayerHoldingState playerHoldingState);
+public abstract class AlternateCommand {
+
+    public abstract void execute(ProjectForm frame, MP3Player mp3Player);
 }

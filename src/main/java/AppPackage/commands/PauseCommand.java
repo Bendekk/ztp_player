@@ -6,9 +6,10 @@ import AppPackage.ProjectForm;
 
 public class PauseCommand extends AlternateCommand {
     @Override
-    public void execute(ProjectForm frame, MP3Player k, PlayerHoldingState playerHoldingState) {
-        if( k.getA() != null ) {
-            playerHoldingState.getState().doAction( playerHoldingState, frame, k);
+    public void execute(ProjectForm frame, MP3Player mp3Player ) {
+        if( mp3Player.getA() != null ) {
+            PlayerHoldingState playerHoldingState = frame.getPlayerHoldingState();
+            playerHoldingState.getState().doAction( playerHoldingState, frame, mp3Player);
         }
     }
 }
