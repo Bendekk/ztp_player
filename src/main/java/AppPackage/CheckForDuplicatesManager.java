@@ -2,10 +2,10 @@ package AppPackage;
 
 import java.util.LinkedList;
 
-public class StopPlayManager {
+public class CheckForDuplicatesManager {
     LinkedList<Song> list = new LinkedList<>();
     boolean trueNameTheSame = false;
-    public StopPlayManager(){
+    public CheckForDuplicatesManager(){
         LinkedList<String> l = new LinkedList<>();
     }
     public void subscribe(Song song) {

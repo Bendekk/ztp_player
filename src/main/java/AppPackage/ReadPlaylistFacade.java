@@ -8,19 +8,18 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class ReadPlaylistFacade {
-    public void read(MP3Player mp3Player, StopPlayManager stopPlayManager, Playlist actualPlaylist)
+    public void read(MP3Player mp3Player, CheckForDuplicatesManager checkForDuplicatesManager, Playlist actualPlaylist)
     {
         if(mp3Player.getFilePlaylist() == null){
             mp3Player.setFilePlaylist( new ArrayList<>() );
         }
         if(mp3Player.getFilePlaylist() != null) {
             mp3Player.getFilePlaylist().clear();
-            stopPlayManager.unsubscribeAll();
+            checkForDuplicatesManager.unsubscribeAll();
             try {
                 FileInputStream fi = new FileInputStream( mp3Player.getPlaylistPhysicalFile() );
                 ObjectInputStream oi = new ObjectInputStream(fi);
-                while (true)
-                {
+                while (true){
                     mp3Player.setFilePlaylist( (ArrayList) oi.readObject() );
                 }
             } catch (EOFException b) {
@@ -52,7 +51,7 @@ public class ReadPlaylistFacade {
                         e.printStackTrace();
                     } ;
                     Song newSong = new Song(s.getName(), duration, artist, s);
-                    stopPlayManager.subscribe(newSong);
+                    checkForDuplicatesManager.subscribe(newSong);
                     actualPlaylist.addToPlaylist(newSong);
                 }
             }

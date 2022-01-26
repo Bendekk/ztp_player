@@ -37,7 +37,7 @@
               </component>
             </children>
           </scrollpane>
-          <grid id="ca9a2" binding="backgroundPanel" layout-manager="GridLayoutManager" row-count="9" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="ca9a2" binding="backgroundPanel" layout-manager="GridLayoutManager" row-count="8" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -117,14 +117,6 @@
                   <text value="Print playlist"/>
                 </properties>
               </component>
-              <component id="d3106" class="javax.swing.JButton" binding="jButtonRepeatMode">
-                <constraints>
-                  <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="Repeat Mode"/>
-                </properties>
-              </component>
               <component id="a127e" class="javax.swing.JButton" binding="jButtonShuffle">
                 <constraints>
                   <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -133,28 +125,12 @@
                   <text value="Shuffle"/>
                 </properties>
               </component>
-              <component id="dce04" class="javax.swing.JButton" binding="jButtonStop">
-                <constraints>
-                  <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="Stop"/>
-                </properties>
-              </component>
               <component id="72e8d" class="javax.swing.JButton" binding="jButtonColorMode">
                 <constraints>
                   <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="Change theme"/>
-                </properties>
-              </component>
-              <component id="37b50" class="javax.swing.JButton" binding="jButtonBrowsePlaylist">
-                <constraints>
-                  <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="Browse playlists"/>
                 </properties>
               </component>
               <component id="2b135" class="javax.swing.JButton" binding="sortByName">
@@ -173,9 +149,25 @@
                   <text value="Sort by duration"/>
                 </properties>
               </component>
+              <component id="dce04" class="javax.swing.JButton" binding="jButtonStop">
+                <constraints>
+                  <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Stop"/>
+                </properties>
+              </component>
+              <component id="37b50" class="javax.swing.JButton" binding="jButtonBrowsePlaylist">
+                <constraints>
+                  <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Browse playlists"/>
+                </properties>
+              </component>
               <component id="373c0" class="javax.swing.JButton" binding="sortByArtist">
                 <constraints>
-                  <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="Sort by artist"/>
