@@ -167,19 +167,6 @@ public class ProjectForm extends JFrame implements KeyListener{
         });
     }
 
-    private void jButtonShuffleActionPerformed(CheckForDuplicatesManager checkForDuplicatesManager, PlayerHoldingState playerHoldingState) {
-        if(mp3Player.getFilePlaylist() != null){
-            Random rnd = new Random();
-            if( mp3Player.getFilePlaylist().size() > 1 ) {
-                int choice = rnd.nextInt(mp3Player.getFilePlaylist().size());
-                mp3Player.setFileCurrentlyPlaying( mp3Player.getFilePlaylist().get( choice ) );
-                executeCommand( new PlayCommand() );
-            }
-            else{
-                System.out.printf("You cannot shuffle a playlist with less than 2 songs.\n");
-            }
-        }
-    }
     private void jButtonStopActionPerformed(CheckForDuplicatesManager checkForDuplicatesManager, PlayerHoldingState playerHoldingState) {
         if( mp3Player.getA() != null ){
             playerHoldingState.setState(new PlayerPlayState() );
@@ -311,7 +298,7 @@ public class ProjectForm extends JFrame implements KeyListener{
 
         jButtonShuffle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonShuffleActionPerformed(checkForDuplicatesManager, playerHoldingState);
+                executeCommand( new ShuffleCommand() );
             }
         });
         jButtonStop.addActionListener(new java.awt.event.ActionListener() {
