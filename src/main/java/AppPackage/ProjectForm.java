@@ -4,9 +4,6 @@ import AppPackage.sort.DurationSort;
 import AppPackage.sort.NameSort;
 import AppPackage.sort.SongSortStrategy;
 import AppPackage.sort.ArtistSort;
-import com.mpatric.mp3agic.InvalidDataException;
-import com.mpatric.mp3agic.Mp3File;
-import com.mpatric.mp3agic.UnsupportedTagException;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -16,22 +13,22 @@ import java.io.*;
 import java.util.*;
 
 public class ProjectForm extends JFrame implements KeyListener{
-    public JPanel panel1;
-    public JButton jButtonClearPlaylist;
-    public JButton jButtonPlay;
-    public JButton jButtonPreviousSong;
-    public JButton jButtonBrowse;
-    public JButton jButtonDisplayPlaylist;
-    public JButton jButtonPause;
-    public JButton jButtonNextSong;
-    public JButton jButtonPrintPlaylist;
-    public JButton jButtonRepeatMode;
-    public JButton jButtonShuffle;
-    public JButton jButtonStop;
-    public JButton jButtonAddToPlaylist;
-    public JList jListPlaylist;
-    public JTextField jTextFieldPlayingFile;
-    public JButton jButtonColorMode;
+    private JPanel panel1;
+    private JButton jButtonClearPlaylist;
+    private JButton jButtonPlay;
+    private JButton jButtonPreviousSong;
+    private JButton jButtonBrowse;
+    private JButton jButtonDisplayPlaylist;
+    private JButton jButtonPause;
+    private JButton jButtonNextSong;
+    private JButton jButtonPrintPlaylist;
+    private JButton jButtonRepeatMode;
+    private JButton jButtonShuffle;
+    private JButton jButtonStop;
+    private JButton jButtonAddToPlaylist;
+    private JList jListPlaylist;
+    private JTextField jTextFieldPlayingFile;
+    private JButton jButtonColorMode;
     private JButton jButtonBrowsePlaylist;
     private JScrollPane scrollPane;
     private JButton sortByName;
@@ -39,23 +36,23 @@ public class ProjectForm extends JFrame implements KeyListener{
     private JButton sortByDuration;
     private JPanel backgroundPanel;
     private JLabel sortlabel;
-    boolean isLightModeOn = false;
-    boolean isPlaylistBrowsed = false;
-    boolean isFileBrowsed = false;
+    private boolean isLightModeOn = false;
+    private boolean isPlaylistBrowsed = false;
+    private boolean isFileBrowsed = false;
     private boolean hidden = true;
     private boolean firstBrowse = true;
     private ReadPlaylistFacade readPlaylistFacade;
     private Iterator iter;
     private Iterator iterPrevious;
     private ProxyInterface colorSelectedProxy;
-    PauseCommand pauseCommand = new PauseCommand();
-    PlayCommand playCommand = new PlayCommand();
+    private PauseCommand pauseCommand = new PauseCommand();
+    private PlayCommand playCommand = new PlayCommand();
 
     private ThemedFrame themedFrame;
     private int displayHeight = 525;
     private SongSortStrategy songSortStrategy;
-    MP3Player mp3Player;
-    ProjectForm thisFrame;
+    private MP3Player mp3Player;
+    private ProjectForm thisFrame;
 
     public class MyKeyListener implements KeyEventDispatcher {
         MP3Player k;
@@ -227,7 +224,7 @@ public class ProjectForm extends JFrame implements KeyListener{
         });
         jButtonBrowsePlaylists(stopPlayManager, actualPlaylist);
     }
-    
+
     private void jButtonAddToPlaylistActionPerformed(StopPlayManager stopPlayManager, Playlist actualPlaylist) {//GEN-FIRST:event_jButtonAddToPlaylistActionPerformed
         boolean GoFurther = true;
 
@@ -472,5 +469,13 @@ public class ProjectForm extends JFrame implements KeyListener{
             if (firstBrowse)
                 System.exit(69);
         }
+    }
+
+    public JButton getjButtonPause() {
+        return jButtonPause;
+    }
+
+    public JTextField getjTextFieldPlayingFile() {
+        return jTextFieldPlayingFile;
     }
 }

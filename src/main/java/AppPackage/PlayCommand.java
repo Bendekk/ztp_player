@@ -18,7 +18,7 @@ public class PlayCommand extends AlternateCommand {
                         FileInputStream buff = new FileInputStream(k.fileCurrentlyPlaying);
                         k.myplayer = new Player(buff);
                         if(k.myplayer != null) {
-                            frame.jTextFieldPlayingFile.setText("Playing: " + k.fileCurrentlyPlaying.getName());
+                            frame.getjTextFieldPlayingFile().setText("Playing: " + k.fileCurrentlyPlaying.getName());
                             k.myplayer.play();
                             System.out.println("hih");
                             k.Browsed = false;
