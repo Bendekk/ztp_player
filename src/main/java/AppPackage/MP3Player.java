@@ -13,9 +13,6 @@ public class MP3Player extends javax.swing.JFrame {
     private ArrayList<File> filePlaylist = new ArrayList();
     private File playlistPhysicalFile;
     private static Thread a;
-//    public static boolean RepeatMode;
-    private boolean Browsed;
-    private Thread b;
 
     public MP3Player() throws InvalidDataException, UnsupportedTagException, IOException {
 

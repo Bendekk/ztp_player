@@ -1,5 +1,8 @@
-package AppPackage;
+package AppPackage.commands;
 
+import AppPackage.MP3Player;
+import AppPackage.state.PlayerHoldingState;
+import AppPackage.ProjectForm;
 import javazoom.jl.player.Player;
 import java.io.FileInputStream;
 

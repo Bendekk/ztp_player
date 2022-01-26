@@ -1,4 +1,6 @@
-package AppPackage;
+package AppPackage.iterator;
+
+import AppPackage.Song;
 
 import java.util.ArrayList;
 import java.util.Iterator;

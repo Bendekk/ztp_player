@@ -1,6 +1,6 @@
-package AppPackage.sort;
+package AppPackage.sortStrategy;
 
-import AppPackage.Playlist;
+import AppPackage.iterator.Playlist;
 import AppPackage.Song;
 
 import java.util.Collections;

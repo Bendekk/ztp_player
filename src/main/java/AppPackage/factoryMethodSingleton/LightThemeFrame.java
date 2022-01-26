@@ -1,4 +1,6 @@
-package AppPackage;
+package AppPackage.factoryMethodSingleton;
+
+import AppPackage.ProjectForm;
 
 import javax.swing.*;
 import java.awt.*;

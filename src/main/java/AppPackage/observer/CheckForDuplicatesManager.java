@@ -1,4 +1,6 @@
-package AppPackage;
+package AppPackage.observer;
+
+import AppPackage.Song;
 
 import java.util.LinkedList;
 

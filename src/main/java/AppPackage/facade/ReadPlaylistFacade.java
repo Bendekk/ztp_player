@@ -1,5 +1,9 @@
-package AppPackage;
+package AppPackage.facade;
 
+import AppPackage.observer.CheckForDuplicatesManager;
+import AppPackage.MP3Player;
+import AppPackage.iterator.Playlist;
+import AppPackage.Song;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;

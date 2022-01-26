@@ -1,6 +1,6 @@
-package AppPackage.sort;
+package AppPackage.sortStrategy;
 
-import AppPackage.Playlist;
+import AppPackage.iterator.Playlist;
 
 public interface SongSortStrategy {
 

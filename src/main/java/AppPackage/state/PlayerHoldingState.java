@@ -1,4 +1,4 @@
-package AppPackage;
+package AppPackage.state;
 
 public class PlayerHoldingState {
     private PlayerPausePlayState state;
